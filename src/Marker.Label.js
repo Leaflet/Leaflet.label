@@ -16,7 +16,15 @@ L.Marker.include({
 	},
 
 	bindLabel: function (content, options) {
-		options = options || {};
+		var anchor = L.point(this.options.icon.options.labelAnchor) || new L.Point(0, 0);
+
+		anchor = anchor.add(L.Label.prototype.options.offset);
+
+		if (options && options.offset) {
+			anchor = anchor.add(options.offset);
+		}
+
+		options = L.Util.extend({offset: anchor}, options);
 
 		if (!this._label && !options.nohide) {
 			this
