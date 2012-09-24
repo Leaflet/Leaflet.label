@@ -3,6 +3,8 @@ Leaflet.label
 
 Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet powered maps.
 
+Check out the [demo](http://jacobtoye.github.com/Leaflet.label/).
+
 ##Usage examples
 
 If you want to just bind a label to marker that will show when the mouse is over it, it's really easy:
