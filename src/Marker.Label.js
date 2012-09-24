@@ -16,7 +16,9 @@ L.Marker.include({
 	},
 
 	bindLabel: function (content, options) {
-		if (!this._label) {
+		options = options || {};
+
+		if (!this._label && !options.nohide) {
 			this
 				.on('mouseover', this.showLabel, this)
 				.on('mouseout', this.hideLabel, this);
@@ -24,7 +26,7 @@ L.Marker.include({
 			if (L.Browser.touch) {
 				this.on('click', this.showLabel, this);
 			}
-
+			this._haslabelHandlers = true;
 		}
 
 		this._label = new L.Label(options, this)
@@ -36,14 +38,18 @@ L.Marker.include({
 	unbindLabel: function () {
 		if (this._label) {
 			this._label = null;
-			this
-				.off('mouseover', this.showLabel)
-				.off('mouseout', this.hideLabel);
 
-			if (L.Browser.touch) {
-				this.of('click', this.showLabel);
+			if (this._haslabelHandlers) {
+				this
+					.off('mouseover', this.showLabel)
+					.off('mouseout', this.hideLabel);
+
+				if (L.Browser.touch) {
+					this.of('click', this.showLabel);
+				}
 			}
 
+			this._haslabelHandlers = false;
 		}
 		return this;
 	},
