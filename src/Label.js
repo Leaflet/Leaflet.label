@@ -3,7 +3,7 @@ L.Label = L.Popup.extend({
 		autoPan: false,
 		className: '',
 		closePopupOnClick: false,
-		offset: new L.Point(20, -35)
+		offset: new L.Point(20, -15)
 	},
 
 	onAdd: function (map) {
