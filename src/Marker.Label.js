@@ -1,6 +1,6 @@
 // Add in an option to icon that is used to set where the label anchor is
 L.Icon.Default.mergeOptions({
-	labelAnchor: new L.Point(0, -20)
+	labelAnchor: new L.Point(9, -20)
 });
 
 // Have to do this since Leaflet is loaded before this plugin and initializes
