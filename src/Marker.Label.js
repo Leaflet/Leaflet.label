@@ -26,7 +26,7 @@ L.Marker.include({
 
 		options = L.Util.extend({offset: anchor}, options);
 
-		if (!this._label && !options.nohide) {
+		if (!this._label && !options.noHide) {
 			this
 				.on('mouseover', this.showLabel, this)
 				.on('mouseout', this.hideLabel, this);
