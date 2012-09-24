@@ -38,11 +38,15 @@
 			iconUrl: '../dist/images/death.png',
 			iconSize: [36, 36],
 			iconAnchor: [18, 18],
+			popupAnchor: [0, -18],
 			labelAnchor: [14, 0] // as I want the label to appear 2px past the icon (18 + 2 - 6)
 		});
 		L.marker([-37.7712, 175.2646], {
-			icon: deathIcon
-		}).bindLabel('Erghhhhh..').addTo(map);	
+				icon: deathIcon
+			})
+			.bindLabel('Erghhhhh..')
+			.bindPopup('Can has popup?')
+			.addTo(map);	
 	</script>
 </body>
 </html>
