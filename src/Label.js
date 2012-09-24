@@ -14,6 +14,7 @@ L.Label = L.Popup.extend({
 		autoPan: false,
 		className: '',
 		closePopupOnClick: false,
+		noHide: false,
 		offset: new L.Point(20, -15)
 	},
 
