@@ -34,8 +34,8 @@ L.marker([-37.785, 175.263])
 
 When you call ````bindLabel()```` you can pass in an options object. These options are:
 
- - noHide: doesn't attach event handler for showing/hiding the label on mouseover/out.
- - className: the css class to add to the label element
+ - **noHide**: doesn't attach event handler for showing/hiding the label on mouseover/out.
+ - **className**: the css class to add to the label element
 
 ##Positioning the label for custom icons
 
