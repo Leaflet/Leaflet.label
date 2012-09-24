@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Draw</title>
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.ie.css" /><![endif]-->
+	<link rel="stylesheet" href="../dist/leaflet.label.css" />
+	
+	<script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+	<script src="../src/Label.js"></script>
+	<script src="../src/Marker.Label.js"></script>
+	<script src="../src/Path.Label.js"></script>
+	<script src="../src/Map.Label.js"></script>
+</head>
+<body>
+	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+	
+	<script>
+		
+		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
+			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
+			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
+
+		L.marker([-37.7772, 175.2606]).bindLabel('A sweet marker!').addTo(map);
+
+		L.polyline([
+			[-37.7612, 175.2756],
+			[-37.7702, 175.2796],
+			[-37.7802, 175.2750],
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('A sweet polyline!.').addTo(map)		
+	</script>
+</body>
+</html>
