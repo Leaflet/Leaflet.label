@@ -24,6 +24,8 @@
 
 		L.marker([-37.7772, 175.2606]).bindLabel('A sweet marker!').addTo(map);
 
+		L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { nohide: true }).addTo(map).showLabel();
+
 		L.polyline([
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
