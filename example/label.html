@@ -22,7 +22,7 @@
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
 			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
-		L.marker([-37.7772, 175.2606]).bindLabel('A sweet marker!').addTo(map);
+		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 
 		L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { nohide: true }).addTo(map).showLabel();
 
@@ -30,7 +30,7 @@
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750],
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('A sweet polyline!.').addTo(map)		
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map)		
 	</script>
 </body>
 </html>
