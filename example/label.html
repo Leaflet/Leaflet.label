@@ -24,13 +24,25 @@
 
 		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 
-		L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { noHide: true }).addTo(map).showLabel();
+		L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { noHide: true })
+			.addTo(map)
+			.showLabel();
 
 		L.polyline([
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750],
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map)		
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map);
+
+		var deathIcon = L.icon({
+			iconUrl: '../dist/images/death.png',
+			iconSize: [36, 36],
+			iconAnchor: [18, 18],
+			labelAnchor: [14, 0] // as I want the label to appear 2px past the icon (18 + 2 - 6)
+		});
+		L.marker([-37.7712, 175.2646], {
+			icon: deathIcon
+		}).bindLabel('Erghhhhh..').addTo(map);	
 	</script>
 </body>
 </html>
