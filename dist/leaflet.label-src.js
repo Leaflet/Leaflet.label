@@ -153,7 +153,7 @@ L.Marker.include({
 					.off('mouseout', this.hideLabel);
 
 				if (L.Browser.touch) {
-					this.of('click', this.showLabel);
+					this.off('click', this.showLabel);
 				}
 			}
 
