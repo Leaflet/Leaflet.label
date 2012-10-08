@@ -10,7 +10,7 @@ L.Path.include({
 			this
 				.on('mouseover', this._showLabel, this)
 				.on('mousemove', this._moveLabel, this)
-				.on('mouseout', this._hideLabel, this);
+				.on('mouseout remove', this._hideLabel, this);
 
 			if (L.Browser.touch) {
 				this.on('click', this._showLabel, this);
@@ -28,7 +28,7 @@ L.Path.include({
 			this
 				.off('mouseover', this._showLabel)
 				.off('mousemove', this._moveLabel)
-				.off('mouseout', this._hideLabel);
+				.off('mouseout remove', this._hideLabel);
 		}
 		return this;
 	},
