@@ -126,14 +126,21 @@ L.Marker.include({
 
 		options = L.Util.extend({offset: anchor}, options);
 
-		if (!this._label && !options.noHide) {
-			this
-				.on('mouseover', this.showLabel, this)
-				.on('mouseout', this.hideLabel, this);
+		if (!this._label) {
+			if (!options.noHide) {
+				this
+					.on('mouseover', this.showLabel, this)
+					.on('mouseout', this.hideLabel, this);
 
-			if (L.Browser.touch) {
-				this.on('click', this.showLabel, this);
+				if (L.Browser.touch) {
+					this.on('click', this.showLabel, this);
+				}
 			}
+
+			this
+				.on('remove', this.hideLabel, this)
+				.on('move', this._moveLabel, this);
+
 			this._haslabelHandlers = true;
 		}
 
@@ -150,7 +157,9 @@ L.Marker.include({
 			if (this._haslabelHandlers) {
 				this
 					.off('mouseover', this.showLabel)
-					.off('mouseout', this.hideLabel);
+					.off('mouseout', this.hideLabel)
+					.off('remove', this.hideLabel)
+					.off('move', this._moveLabel);
 
 				if (L.Browser.touch) {
 					this.off('click', this.showLabel);
@@ -166,6 +175,10 @@ L.Marker.include({
 		if (this._label) {
 			this._label.setContent(content);
 		}
+	},
+
+	_moveLabel: function (e) {
+		this._label.setLatLng(e.latlng);
 	}
 });
 
@@ -181,7 +194,7 @@ L.Path.include({
 			this
 				.on('mouseover', this._showLabel, this)
 				.on('mousemove', this._moveLabel, this)
-				.on('mouseout', this._hideLabel, this);
+				.on('mouseout remove', this._hideLabel, this);
 
 			if (L.Browser.touch) {
 				this.on('click', this._showLabel, this);
@@ -199,7 +212,7 @@ L.Path.include({
 			this
 				.off('mouseover', this._showLabel)
 				.off('mousemove', this._moveLabel)
-				.off('mouseout', this._hideLabel);
+				.off('mouseout remove', this._hideLabel);
 		}
 		return this;
 	},
