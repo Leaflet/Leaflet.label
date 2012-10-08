@@ -28,8 +28,19 @@
 			.addTo(map)
 			.showLabel();
 
-		// Remove marker on click so we can check that the label is also removed
-		m.on('click', function () { map.removeLayer(m); });
+		// Move marker to confirm that label moves when marker moves (first click)
+		// Remove marker on click so we can check that the label is also removed (second click)
+		var clicks = 0;
+		function onMarkerClick() {
+			clicks++;
+				if (clicks === 1) {
+					m.setLatLng(map.getCenter());
+				} else {
+					m.off('click', onMarkerClick);
+					map.removeLayer(m);
+				}
+		}
+		m.on('click', onMarkerClick, this);
 
 		var p = L.polyline([
 			[-37.7612, 175.2756],
