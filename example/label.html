@@ -3,11 +3,12 @@
 <head>
 	<title>Leaflet.label example</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
-	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.ie.css" /><![endif]-->
+	<link rel="stylesheet" href="../libs/leaflet/leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../libs/leaflet/leaflet.ie.css" /><![endif]-->
 	<link rel="stylesheet" href="../dist/leaflet.label.css" />
 	
-	<script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+	<script src="../libs/leaflet/leaflet-src.js"></script>
+
 	<script src="../src/Label.js"></script>
 	<script src="../src/Marker.Label.js"></script>
 	<script src="../src/Path.Label.js"></script>
@@ -15,7 +16,6 @@
 </head>
 <body>
 	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
-	
 	<script>
 		
 		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
@@ -24,15 +24,21 @@
 
 		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 
-		L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { noHide: true })
+		var m = L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { noHide: true })
 			.addTo(map)
 			.showLabel();
 
-		L.polyline([
+		// Remove marker on click so we can check that the label is also removed
+		m.on('click', function () { map.removeLayer(m); });
+
+		var p = L.polyline([
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750],
 		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map);
+
+		// Remove polyline on click so we can check that the label is also removed
+		p.on('click', function () { map.removeLayer(p); });
 
 		var deathIcon = L.icon({
 			iconUrl: '../dist/images/death.png',
@@ -46,7 +52,7 @@
 			})
 			.bindLabel('Erghhhhh..')
 			.bindPopup('Can has popup?')
-			.addTo(map);	
+			.addTo(map);
 	</script>
 </body>
 </html>
