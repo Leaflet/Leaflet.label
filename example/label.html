@@ -24,7 +24,7 @@
 
 		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 
-		var m = L.marker([-37.785, 175.263]).bindLabel('A sweet static label!', { noHide: true })
+		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel('A sweet static label!', { noHide: true })
 			.addTo(map)
 			.showLabel();
 
