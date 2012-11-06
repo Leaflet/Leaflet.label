@@ -9,5 +9,5 @@ L.FeatureGroup.include({
 
 	updateLabelContent: function (content) {
 		this.invoke('updateLabelContent', content);
-	},
+	}
 });
