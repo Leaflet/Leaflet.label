@@ -4,7 +4,8 @@ var deps = {
 			'Label.js',
 			'Marker.Label.js',
 			'Path.Label.js',
-			'Map.Label.js'
+			'Map.Label.js',
+			'FeatureGroup.Label.js'
 		],
 		desc: 'Leaflet.label plugin files.'
 	}
