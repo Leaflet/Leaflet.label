@@ -13,6 +13,7 @@
 	<script src="../src/Marker.Label.js"></script>
 	<script src="../src/Path.Label.js"></script>
 	<script src="../src/Map.Label.js"></script>
+	<script src="../src/FeatureGroup.Label.js"></script>
 </head>
 <body>
 	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
@@ -63,6 +64,13 @@
 			})
 			.bindLabel('Erghhhhh..')
 			.bindPopup('Can has popup?')
+			.addTo(map);
+
+		L.multiPolygon([
+				[[-37.7599, 175.2515], [-37.7599, 175.2595], [-37.7653, 175.2595], [-37.7653, 175.2515], [-37.7599, 175.2515]],
+				[[-37.7672, 175.2560], [-37.7672, 175.2601], [-37.7706, 175.2601], [-37.7706, 175.2560], [-37.7672, 175.2560]]
+			])
+			.bindLabel('MultiPolygon\'s have labels as well :)')
 			.addTo(map);
 	</script>
 </body>
