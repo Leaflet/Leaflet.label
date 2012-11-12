@@ -9,6 +9,7 @@ L.Label = L.Popup.extend({
 	options: {
 		autoPan: false,
 		className: '',
+		withoutDefaultStyle: false,
 		closePopupOnClick: false,
 		noHide: false,
 		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
@@ -53,7 +54,7 @@ L.Label = L.Popup.extend({
 	},
 
 	_initLayout: function () {
-		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		this._container = L.DomUtil.create('div', (this.options.withoutDefaultStyle ? 'leaflet-label-clear ' : 'leaflet-label ') + this.options.className + ' leaflet-zoom-animated');
 	},
 
 	_updateContent: function () {

@@ -21,6 +21,11 @@
 	z-index: 6;
 }
 
+.leaflet-label-clear {
+	position: absolute;
+	display: block;
+}
+
 .leaflet-label:before {
 	border-right: 6px solid black;
 	border-right-color: inherit;
