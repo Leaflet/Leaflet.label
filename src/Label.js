@@ -5,6 +5,7 @@ L.Label = L.Popup.extend({
 		withoutDefaultStyle: false,
 		closePopupOnClick: false,
 		noHide: false,
+		pane: 'popupPane',
 		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
 	},
 
@@ -21,7 +22,7 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 0);
 		}
-		map._panes.popupPane.appendChild(this._container);
+		map._panes[this.options.pane].appendChild(this._container);
 
 		map.on('viewreset', this._updatePosition, this);
 
