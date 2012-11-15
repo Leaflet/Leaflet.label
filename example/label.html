@@ -14,6 +14,20 @@
 	<script src="../src/Path.Label.js"></script>
 	<script src="../src/Map.Label.js"></script>
 	<script src="../src/FeatureGroup.Label.js"></script>
+	<style>
+		.markerTextStyle {
+			white-space: nowrap;
+			background-color: #FFFFFF;
+			border-radius: 4px 4px 4px 4px;
+			border-style: solid;
+			border-width: 1px;
+			box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4);
+			font-weight: bold;
+			font-size: 10px;
+			opacity: 1;
+			padding: 1px 3px 1px 11px;	
+		}
+	</style>
 </head>
 <body>
 	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
@@ -29,6 +43,10 @@
 			.addTo(map)
 			.showLabel();
 
+
+		var mCustom = L.marker([-37.79, 175.263], {draggable:false}).bindLabel('<span class="markerTextStyle">Opel</span>', { noHide: true, withoutDefaultStyle: true,pane: 'overlayPane', offset: [0,-40] })
+		.addTo(map)
+		.showLabel();		
 		// Move marker to confirm that label moves when marker moves (first click)
 		// Remove marker on click so we can check that the label is also removed (second click)
 		var clicks = 0;
@@ -47,7 +65,7 @@
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750],
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.', { withoutDefaultStyle:true }).addTo(map);
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map);
 
 		// Remove polyline on click so we can check that the label is also removed
 		p.on('click', function () { map.removeLayer(p); });
