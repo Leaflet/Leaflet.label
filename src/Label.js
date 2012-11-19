@@ -2,8 +2,10 @@ L.Label = L.Popup.extend({
 	options: {
 		autoPan: false,
 		className: '',
+		withoutDefaultStyle: false,
 		closePopupOnClick: false,
 		noHide: false,
+		pane: 'popupPane',
 		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
 	},
 
@@ -20,7 +22,7 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 0);
 		}
-		map._panes.popupPane.appendChild(this._container);
+		map._panes[this.options.pane].appendChild(this._container);
 
 		map.on('viewreset', this._updatePosition, this);
 
@@ -35,6 +37,24 @@ L.Label = L.Popup.extend({
 		}
 	},
 
+	onRemove: function (map) {
+		map._panes[this.options.pane].removeChild(this._container);
+
+		L.Util.falseFn(this._container.offsetWidth); // force reflow
+
+		map.off({
+			viewreset: this._updatePosition,
+			preclick: this._close,
+			zoomanim: this._zoomAnimation
+		}, this);
+
+		if (map.options.fadeAnimation) {
+			L.DomUtil.setOpacity(this._container, 0);
+		}
+
+		this._map = null;
+	},
+
 	close: function () {
 		var map = this._map;
 
@@ -46,7 +66,7 @@ L.Label = L.Popup.extend({
 	},
 
 	_initLayout: function () {
-		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		this._container = L.DomUtil.create('div', (this.options.withoutDefaultStyle ? 'leaflet-label-clear ' : 'leaflet-label ') + this.options.className + ' leaflet-zoom-animated');
 	},
 
 	_updateContent: function () {
