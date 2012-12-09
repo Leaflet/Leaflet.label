@@ -23,6 +23,7 @@ L.Path.include({
 
 	unbindLabel: function () {
 		if (this._label) {
+			this._hideLabel();
 			this._label = null;
 			this._showLabelAdded = false;
 			this

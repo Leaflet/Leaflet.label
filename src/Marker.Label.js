@@ -63,6 +63,8 @@ L.Marker.include({
 
 	unbindLabel: function () {
 		if (this._label) {
+			this.hideLabel();
+
 			this._label = null;
 
 			if (this._haslabelHandlers) {
