@@ -32,6 +32,8 @@ L.marker([-37.785, 175.263])
 	.showLabel();
 ````
 
+*N.B.* if you call `showLabel()` before it is added to the map the label will not show.
+
 ##Options
 
 When you call ````bindLabel()```` you can pass in an options object. These options are:
