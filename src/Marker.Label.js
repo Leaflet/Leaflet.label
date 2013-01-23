@@ -34,7 +34,7 @@ L.Marker.include({
 		if (options && options.offset) {
 			anchor = anchor.add(options.offset);
 		}
-
+		
 		options = L.Util.extend({offset: anchor}, options);
 
 		if (!this._label) {
@@ -57,6 +57,10 @@ L.Marker.include({
 
 		this._label = new L.Label(options, this)
 			.setContent(content);
+
+		if (this.options.draggable) {
+			this.on('dragend',this._moveLabelAfterDrag,this);
+		}
 
 		return this;
 	},
@@ -92,5 +96,9 @@ L.Marker.include({
 
 	_moveLabel: function (e) {
 		this._label.setLatLng(e.latlng);
+	},
+
+	_moveLabelAfterDrag:function (e) {
+		this._label.setLatLng(e.target._latlng);
 	}
 });
