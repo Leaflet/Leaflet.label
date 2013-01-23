@@ -5,6 +5,10 @@ Leaflet.draw Changelog
 
 An in-progress version being developed on the master branch.
 
+### Bug fixes
+
+ * Fixed labels not updating position after being dragged. (by [@snkashis](https://github.com/snkashis)). [#13](https://github.com/Leaflet/Leaflet.label/pull/13)
+
 ## 0.1.1 (December 10, 2012)
 
 ### Plugin improvements
