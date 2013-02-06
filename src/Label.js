@@ -58,13 +58,13 @@ L.Label = L.Popup.extend({
 	},
 
 	_updateLayout: function (side) {
-    this._container.className = this._container.className.replace( /(?:^|\s)(no-after|no-before)(?!\S)/g , '' )
-    if (side === 'to_left') {
-      this._container.className += ' no-before';
-    } else {
-      this._container.className += ' no-after';
-    }
-  },
+		this._container.className = this._container.className.replace( /(?:^|\s)(no-after|no-before)(?!\S)/g , '' )
+		if (side === 'to_left') {
+			this._container.className += ' no-before';
+		} else {
+			this._container.className += ' no-after';
+		}
+	},
 
 	_updatePosition: function () {
 		var pos = this._map.latLngToLayerPoint(this._latlng);
@@ -73,14 +73,15 @@ L.Label = L.Popup.extend({
 	},
 
 	_setPosition: function (pos) {
-    var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter())
-    if (pos.x <= pixelCenter.x) {
-      this._updateLayout('to_right');
-  		pos = pos.add(this.options.offset);
-    } else {
-      this._updateLayout('to_left');
-      pos = pos.add(new L.Point(-(getComputedStyle(this._container).getPropertyValue('width').replace('px',''))-32, -15));
-    }
+		var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter())
+		if (pos.x <= pixelCenter.x) {
+			this._updateLayout('to_right');
+			pos = pos.add(this.options.offset);
+		} else {
+			this._updateLayout('to_left');
+			var flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
+			pos = pos.add(flipX);
+		}
 		L.DomUtil.setPosition(this._container, pos);
 	},
 
