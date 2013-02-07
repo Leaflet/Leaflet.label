@@ -35,6 +35,24 @@ L.Label = L.Popup.extend({
 		}
 	},
 
+	onRemove: function (map) {
+		this._map._panes.markerPane.removeChild(this._container);
+
+		L.Util.falseFn(this._container.offsetWidth); // force reflow
+
+		this._map.off({
+			viewreset: this._updatePosition,
+			preclick: this._close,
+			zoomanim: this._zoomAnimation
+		}, this);
+
+		if (this._map.options.fadeAnimation) {
+			L.DomUtil.setOpacity(this._container, 0);
+		}
+
+		this._map = null;
+	},
+
 	close: function () {
 		var map = this._map;
 
