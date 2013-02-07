@@ -27,7 +27,7 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 0);
 		}
-		map._panes.popupPane.appendChild(this._container);
+		map._panes.markerPane.appendChild(this._container);
 
 		map.on('viewreset', this._updatePosition, this);
 
