@@ -73,13 +73,17 @@ L.Label = L.Popup.extend({
 	},
 
 	_setPosition: function (pos) {
-		var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter())
+		var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter()), flipX;
 		if (pos.x <= pixelCenter.x) {
 			this._updateLayout('to_right');
 			pos = pos.add(this.options.offset);
 		} else {
 			this._updateLayout('to_left');
-			var flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
+			if(typeof getComputedStyle !== 'undefined') {
+				flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
+			} else {
+				flipX = new L.Point(-this.options.offset.x - this._container.offsetWidth, this.options.offset.y);
+			};
 			pos = pos.add(flipX);
 		}
 		L.DomUtil.setPosition(this._container, pos);
