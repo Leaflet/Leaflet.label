@@ -23,11 +23,11 @@
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
 			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
-		L.marker([-37.7772, 175.2606]).bindLabel('Look, a revealing label to the right!').addTo(map);
+		L.marker([-37.7772, 175.2606]).bindLabel('Look, a revealing label to the right!', { flip: true }).addTo(map);
 
-		L.marker([-37.7772, 175.2909]).bindLabel('Look, a revealing label to the left!').addTo(map);
+		L.marker([-37.7772, 175.2909]).bindLabel('Look, a revealing label to the left!', { flip: true }).addTo(map);
 
-		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel('A sweet static label that starts on the right!', { noHide: true })
+		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel("A sweet static label that flips at map's center!", { noHide: true, flip: true })
 			.addTo(map)
 			.showLabel();
 
@@ -45,7 +45,7 @@
 		}
 		m.on('click', onMarkerClick, this);
 
-		var n = L.marker([-37.785, 175.288], {draggable:true}).bindLabel('A sweet static label that starts on the left!', { noHide: true })
+		var n = L.marker([-37.785, 175.288], {draggable:true}).bindLabel("A sweet static label that doesn't flip!", { noHide: true })
 				.addTo(map)
 				.showLabel();
 
@@ -67,7 +67,7 @@
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750],
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map);
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.', { flip: true }).addTo(map);
 
 		// Remove polyline on click so we can check that the label is also removed
 		p.on('click', function () { map.removeLayer(p); });
@@ -90,7 +90,7 @@
 				[[-37.7599, 175.2515], [-37.7599, 175.2595], [-37.7653, 175.2595], [-37.7653, 175.2515], [-37.7599, 175.2515]],
 				[[-37.7672, 175.2560], [-37.7672, 175.2601], [-37.7706, 175.2601], [-37.7706, 175.2560], [-37.7672, 175.2560]]
 			])
-			.bindLabel('MultiPolygons have labels as well :)')
+			.bindLabel('MultiPolygons have labels as well :)', { flip: true })
 			.addTo(map);
 	</script>
 </body>

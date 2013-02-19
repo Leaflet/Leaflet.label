@@ -4,7 +4,8 @@ L.Label = L.Popup.extend({
 		className: '',
 		closePopupOnClick: false,
 		noHide: false,
-		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
+		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
+		flip: false
 	},
 
 	onAdd: function (map) {
@@ -84,19 +85,24 @@ L.Label = L.Popup.extend({
 	},
 
 	_setPosition: function (pos) {
-		var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter()), flipX;
-		if (pos.x <= pixelCenter.x) {
+		if (!this.options.flip) {
 			this._updateLayout('to_right');
 			pos = pos.add(this.options.offset);
 		} else {
-			this._updateLayout('to_left');
-			// Feature detection: IE8 and earlier do not support getComputedStyle
-			if(typeof getComputedStyle === 'undefined') {
-				flipX = new L.Point(-this.options.offset.x - this._container.offsetWidth, this.options.offset.y);
+			var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter()), flipX;
+			if (pos.x <= pixelCenter.x) {
+				this._updateLayout('to_right');
+				pos = pos.add(this.options.offset);
 			} else {
-				flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
-			};
-			pos = pos.add(flipX);
+				this._updateLayout('to_left');
+				// Feature detection: IE8 and earlier do not support getComputedStyle
+				if(typeof getComputedStyle === 'undefined') {
+					flipX = new L.Point(-this.options.offset.x - this._container.offsetWidth, this.options.offset.y);
+				} else {
+					flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
+				};
+				pos = pos.add(flipX);
+			}
 		}
 		L.DomUtil.setPosition(this._container, pos);
 	},
