@@ -23,9 +23,11 @@
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
 			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
-		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
+		L.marker([-37.7772, 175.2606]).bindLabel('Look, a revealing label to the right!').addTo(map);
 
-		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel('A sweet static label!', { noHide: true })
+		L.marker([-37.7772, 175.2909]).bindLabel('Look, a revealing label to the left!').addTo(map);
+
+		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel('A sweet static label that starts on the right!', { noHide: true })
 			.addTo(map)
 			.showLabel();
 
@@ -42,6 +44,24 @@
 				}
 		}
 		m.on('click', onMarkerClick, this);
+
+		var n = L.marker([-37.785, 175.288], {draggable:true}).bindLabel('A sweet static label that starts on the left!', { noHide: true })
+				.addTo(map)
+				.showLabel();
+
+		// Move marker to confirm that label moves when marker moves (first click)
+		// Remove marker on click so we can check that the label is also removed (second click)
+		var clacks = 0;
+		function onMarkerClick() {
+			clacks++;
+			if (clacks === 1) {
+				n.setLatLng(map.getCenter());
+			} else {
+				n.off('click', onMarkerClick);
+				map.removeLayer(n);
+			}
+		}
+		n.on('click', onMarkerClick, this);
 
 		var p = L.polyline([
 			[-37.7612, 175.2756],

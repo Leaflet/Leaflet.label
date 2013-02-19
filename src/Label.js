@@ -58,11 +58,22 @@ L.Label = L.Popup.extend({
 	},
 
 	_updateLayout: function (side) {
-		this._container.className = this._container.className.replace( /(?:^|\s)(no-after|no-before)(?!\S)/g , '' )
-		if (side === 'to_left') {
-			this._container.className += ' no-before';
-		} else {
+		// Feature detection: for IE8 and earlier we have to remove previously created 'ie_after' divs
+		if(typeof getComputedStyle === 'undefined') {
+			var ie_afters = this._container.getElementsByTagName('div');
+			for (var i = 0; i < ie_afters.length; i++) {
+				ie_afters[i].parentNode.removeChild(ie_afters[i]);
+			}
+		}
+		this._container.className = this._container.className.replace( /(?:^|\s)(no-after|no-before)(?!\S)/g , '' );
+		if (side === 'to_right') {
 			this._container.className += ' no-after';
+		} else {
+			this._container.className += ' no-before';
+			// Feature detection: IE8 and earlier don't redraw :before and :after pseudo elements so we add a div with identical css
+			if(typeof getComputedStyle === 'undefined') {
+				L.DomUtil.create('div', 'ie_after', this._container);
+			}
 		}
 	},
 
@@ -79,10 +90,11 @@ L.Label = L.Popup.extend({
 			pos = pos.add(this.options.offset);
 		} else {
 			this._updateLayout('to_left');
-			if(typeof getComputedStyle !== 'undefined') {
-				flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
-			} else {
+			// Feature detection: IE8 and earlier do not support getComputedStyle
+			if(typeof getComputedStyle === 'undefined') {
 				flipX = new L.Point(-this.options.offset.x - this._container.offsetWidth, this.options.offset.y);
+			} else {
+				flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
 			};
 			pos = pos.add(flipX);
 		}

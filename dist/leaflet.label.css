@@ -32,7 +32,7 @@
 	left: -10px;
 }
 
-.leaflet-label:after {
+.leaflet-label:after, .ie_after {
   border-left: 6px solid black;
   border-left-color: inherit;
   border-top: 6px solid transparent;
