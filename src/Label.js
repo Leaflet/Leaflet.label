@@ -5,7 +5,7 @@ L.Label = L.Popup.extend({
 		closePopupOnClick: false,
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
-		flip: false
+		flip: 'right'
 	},
 
 	onAdd: function (map) {
@@ -71,7 +71,7 @@ L.Label = L.Popup.extend({
 			this._container.className += ' no-after';
 		} else {
 			this._container.className += ' no-before';
-			// Feature detection: IE8 and earlier don't redraw :before and :after pseudo elements so we add a div with identical css
+			// Feature detection: IE8 and earlier don't redraw :after pseudo elements so we add a div with identical css
 			if(typeof getComputedStyle === 'undefined') {
 				L.DomUtil.create('div', 'ie_after', this._container);
 			}
@@ -84,25 +84,31 @@ L.Label = L.Popup.extend({
 		this._setPosition(pos);
 	},
 
-	_setPosition: function (pos) {
-		if (!this.options.flip) {
-			this._updateLayout('to_right');
-			pos = pos.add(this.options.offset);
+	_calculateLeftOffset: function () {
+		// Feature detection: IE8 and earlier do not support getComputedStyle
+		if(typeof getComputedStyle === 'undefined') {
+			return new L.Point(-this.options.offset.x - this._container.offsetWidth, this.options.offset.y);
 		} else {
-			var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter()), flipX;
+			return new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
+		};
+	},
+
+	_setPosition: function (pos) {
+		if (this.options.flip === 'auto') {
+			var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter());
 			if (pos.x <= pixelCenter.x) {
 				this._updateLayout('to_right');
 				pos = pos.add(this.options.offset);
 			} else {
 				this._updateLayout('to_left');
-				// Feature detection: IE8 and earlier do not support getComputedStyle
-				if(typeof getComputedStyle === 'undefined') {
-					flipX = new L.Point(-this.options.offset.x - this._container.offsetWidth, this.options.offset.y);
-				} else {
-					flipX = new L.Point(-22 - this.options.offset.x - (getComputedStyle(this._container).getPropertyValue('width').replace('px','')), this.options.offset.y);
-				};
-				pos = pos.add(flipX);
-			}
+				pos = pos.add(this._calculateLeftOffset());
+			} 
+		} else if (this.options.flip === 'left') {
+			this._updateLayout('to_left');
+			pos = pos.add(this._calculateLeftOffset());
+		} else {
+			this._updateLayout('to_right');
+			pos = pos.add(this.options.offset);
 		}
 		L.DomUtil.setPosition(this._container, pos);
 	},
