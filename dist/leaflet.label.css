@@ -31,3 +31,22 @@
 	top: 5px;
 	left: -10px;
 }
+
+.leaflet-label:after, .ie_after {
+  border-left: 6px solid black;
+  border-left-color: inherit;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: -10px;
+}
+
+.no-before:before {
+  content: none;
+}
+
+.no-after:after {
+  content: none;
+}
