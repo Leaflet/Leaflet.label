@@ -1,19 +1,19 @@
 Leaflet.label
 =============
 
-Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet powered maps.
+Leaflet.label is a plugin for adding labels to markers &amp; shapes on leaflet powered maps.
 
 Check out the [demo](http://leaflet.github.com/Leaflet.label/).
 
 ##Usage examples
 
-If you want to just bind a label to marker that will show when the mouse is over it, it's really easy:
+If you want to just bind a label to a marker that will show when the mouse is over it, it's really easy:
 
 ````
 L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 ````
 
-Path overlays works the same:
+Path overlays work the same:
 
 ````
 L.polyline([
@@ -40,6 +40,7 @@ When you call ````bindLabel()```` you can pass in an options object. These optio
 
  - **noHide**: doesn't attach event handler for showing/hiding the label on mouseover/out.
  - **className**: the css class to add to the label element
+ - **flip**: the label's orientation; can be 'right' (the default), 'left', or 'auto'. 'auto' puts the label to the left on the right half of the map, to the right on the left half.
 
 ##Positioning the label for custom icons
 
