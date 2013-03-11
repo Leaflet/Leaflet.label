@@ -10,6 +10,8 @@ L.Label = L.Popup.extend({
 	onAdd: function (map) {
 		this._map = map;
 
+		this._pane = this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
+
 		if (!this._container) {
 			this._initLayout();
 		}
@@ -20,11 +22,11 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 0);
 		}
-		map._panes.popupPane.appendChild(this._container);
+		this._pane.appendChild(this._container);
 
 		map.on('viewreset', this._updatePosition, this);
 
-		if (L.Browser.any3d) {
+		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
 		}
 
@@ -33,6 +35,23 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 1);
 		}
+	},
+
+	onRemove: function (map) {
+		this._pane.removeChild(this._container);
+
+		L.Util.falseFn(this._container.offsetWidth); // force reflow
+
+		map.off({
+			viewreset: this._updatePosition,
+			zoomanim: this._zoomAnimation
+		}, this);
+
+		if (map.options.fadeAnimation) {
+			L.DomUtil.setOpacity(this._container, 0);
+		}
+
+		this._map = null;
 	},
 
 	close: function () {
