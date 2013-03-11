@@ -52,7 +52,7 @@ L.Marker.include({
 				.on('remove', this.hideLabel, this)
 				.on('move', this._moveLabel, this);
 
-			this._haslabelHandlers = true;
+			this._hasLabelHandlers = true;
 		}
 
 		this._label = new L.Label(options, this)
@@ -67,7 +67,7 @@ L.Marker.include({
 
 			this._label = null;
 
-			if (this._haslabelHandlers) {
+			if (this._hasLabelHandlers) {
 				this
 					.off('mouseover', this.showLabel)
 					.off('mouseout', this.hideLabel)
@@ -79,7 +79,7 @@ L.Marker.include({
 				}
 			}
 
-			this._haslabelHandlers = false;
+			this._hasLabelHandlers = false;
 		}
 		return this;
 	},
