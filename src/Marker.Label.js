@@ -20,7 +20,7 @@ L.Marker.include({
 	},
 
 	hideLabel: function () {
-		if (this._label) {
+		if (this._label && !this._noHide) {
 			this._label.close();
 		}
 		return this;
@@ -36,6 +36,8 @@ L.Marker.include({
 		}
 
 		options = L.Util.extend({offset: anchor}, options);
+
+		this._noHide = options.noHide;
 
 		if (!this._label) {
 			if (!options.noHide) {
@@ -88,6 +90,10 @@ L.Marker.include({
 		if (this._label) {
 			this._label.setContent(content);
 		}
+	},
+
+	noHide: function (noHide) {
+		this._noHide = noHide;
 	},
 
 	_moveLabel: function (e) {
