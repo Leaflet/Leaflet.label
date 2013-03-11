@@ -59,12 +59,17 @@
 			popupAnchor: [0, -18],
 			labelAnchor: [14, 0] // as I want the label to appear 2px past the icon (18 + 2 - 6)
 		});
+		var noHide = false;
 		L.marker([-37.7712, 175.2646], {
 				icon: deathIcon
 			})
 			.bindLabel('Erghhhhh..')
 			.bindPopup('Can has popup?')
-			.addTo(map);
+			.addTo(map)
+			.on('click', function () {
+				m.setLabelNoHide(noHide);
+				noHide = !noHide;
+			});
 
 		L.multiPolygon([
 				[[-37.7599, 175.2515], [-37.7599, 175.2595], [-37.7653, 175.2595], [-37.7653, 175.2515], [-37.7599, 175.2515]],
