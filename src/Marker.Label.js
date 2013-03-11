@@ -26,6 +26,22 @@ L.Marker.include({
 		return this;
 	},
 
+	setLabelNoHide: function (noHide) {
+		if (this._labelNoHide === noHide) {
+			return;
+		}
+
+		this._labelNoHide = noHide;
+
+		if (noHide) {
+			this._removeLabelRevealHandlers();
+			this.showLabel();
+		} else {
+			this._addLabelRevealHandlers();
+			this.hideLabel();
+		}
+	},
+
 	bindLabel: function (content, options) {
 		var anchor = L.point(this.options.icon.options.labelAnchor) || new L.Point(0, 0);
 
@@ -37,15 +53,11 @@ L.Marker.include({
 
 		options = L.Util.extend({offset: anchor}, options);
 
-		if (!this._label) {
-			if (!options.noHide) {
-				this
-					.on('mouseover', this.showLabel, this)
-					.on('mouseout', this.hideLabel, this);
+		this._labelNoHide = options.noHide;
 
-				if (L.Browser.touch) {
-					this.on('click', this.showLabel, this);
-				}
+		if (!this._label) {
+			if (!this._labelNoHide) {
+				this._addLabelRevealHandlers();
 			}
 
 			this
@@ -68,15 +80,13 @@ L.Marker.include({
 			this._label = null;
 
 			if (this._hasLabelHandlers) {
+				if (!this._labelNoHide) {
+					this._removeLabelRevealHandlers();
+				}
+
 				this
-					.off('mouseover', this.showLabel)
-					.off('mouseout', this.hideLabel)
 					.off('remove', this.hideLabel)
 					.off('move', this._moveLabel);
-
-				if (L.Browser.touch) {
-					this.off('click', this.showLabel);
-				}
 			}
 
 			this._hasLabelHandlers = false;
@@ -87,6 +97,28 @@ L.Marker.include({
 	updateLabelContent: function (content) {
 		if (this._label) {
 			this._label.setContent(content);
+		}
+	},
+
+	_addLabelRevealHandlers: function () {
+		this
+			.on('mouseover', this.showLabel, this)
+			.on('mouseout', this.hideLabel, this);
+
+		if (L.Browser.touch) {
+			this.on('click', this.showLabel, this);
+		}
+	},
+
+	_removeLabelRevealHandlers: function () {
+		this
+			.off('mouseover', this.showLabel)
+			.off('mouseout', this.hideLabel)
+			.off('remove', this.hideLabel)
+			.off('move', this._moveLabel);
+
+		if (L.Browser.touch) {
+			this.off('click', this.showLabel);
 		}
 	},
 
