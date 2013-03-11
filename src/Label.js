@@ -64,8 +64,17 @@ L.Label = L.Popup.extend({
 		}
 	},
 
+	updateZIndex: function (zIndex) {
+		this._zIndex = zIndex;
+
+		if (this._container) {
+			this._container.style.zIndex = zIndex;
+		}
+	},
+
 	_initLayout: function () {
 		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		this.updateZIndex(this._zIndex);
 	},
 
 	_updateContent: function () {

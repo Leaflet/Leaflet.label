@@ -92,5 +92,17 @@ L.Marker.include({
 
 	_moveLabel: function (e) {
 		this._label.setLatLng(e.latlng);
+	},
+
+	_originalUpdateZIndex: L.Marker.prototype._updateZIndex,
+
+	_updateZIndex: function (offset) {
+		var zIndex = this._zIndex + offset;
+
+		this._originalUpdateZIndex(offset);
+
+		if (this._label) {
+			this._label.updateZIndex(zIndex);
+		}
 	}
 });
