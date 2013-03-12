@@ -1,9 +1,17 @@
 /*
- Copyright (c) 2012, Smartrak, Jacob Toye
- Leaflet.label is an open-source JavaScript library for adding labels to markers and paths on leaflet powered maps.
- https://github.com/jacobtoye/Leaflet.label
+	Leaflet.label, a plugin that adds labels to markers and vectors for Leaflet powered maps.
+	(c) 2012-2013, Jacob Toye, Smartrak
+
+	https://github.com/Leaflet/Leaflet.label
+	http://leafletjs.com
+	https://github.com/jacobtoye
 */
-(function (window, undefined) {
+(function (window, document, undefined) {
+/*
+ * Leaflet.label assumes that you have already included the Leaflet library.
+ */
+
+L.labelVersion = '0.1.2-dev';
 
 L.Label = L.Popup.extend({
 	options: {
@@ -17,6 +25,8 @@ L.Label = L.Popup.extend({
 	onAdd: function (map) {
 		this._map = map;
 
+		this._pane = this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
+
 		if (!this._container) {
 			this._initLayout();
 		}
@@ -27,11 +37,11 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 0);
 		}
-		map._panes.popupPane.appendChild(this._container);
+		this._pane.appendChild(this._container);
 
 		map.on('viewreset', this._updatePosition, this);
 
-		if (L.Browser.any3d) {
+		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
 		}
 
@@ -40,6 +50,23 @@ L.Label = L.Popup.extend({
 		if (animFade) {
 			L.DomUtil.setOpacity(this._container, 1);
 		}
+	},
+
+	onRemove: function (map) {
+		this._pane.removeChild(this._container);
+
+		L.Util.falseFn(this._container.offsetWidth); // force reflow
+
+		map.off({
+			viewreset: this._updatePosition,
+			zoomanim: this._zoomAnimation
+		}, this);
+
+		if (map.options.fadeAnimation) {
+			L.DomUtil.setOpacity(this._container, 0);
+		}
+
+		this._map = null;
 	},
 
 	close: function () {
@@ -52,8 +79,17 @@ L.Label = L.Popup.extend({
 		}
 	},
 
+	updateZIndex: function (zIndex) {
+		this._zIndex = zIndex;
+
+		if (this._container) {
+			this._container.style.zIndex = zIndex;
+		}
+	},
+
 	_initLayout: function () {
 		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		this.updateZIndex(this._zIndex);
 	},
 
 	_updateContent: function () {
@@ -115,6 +151,22 @@ L.Marker.include({
 		return this;
 	},
 
+	setLabelNoHide: function (noHide) {
+		if (this._labelNoHide === noHide) {
+			return;
+		}
+
+		this._labelNoHide = noHide;
+
+		if (noHide) {
+			this._removeLabelRevealHandlers();
+			this.showLabel();
+		} else {
+			this._addLabelRevealHandlers();
+			this.hideLabel();
+		}
+	},
+
 	bindLabel: function (content, options) {
 		var anchor = L.point(this.options.icon.options.labelAnchor) || new L.Point(0, 0);
 
@@ -126,22 +178,18 @@ L.Marker.include({
 
 		options = L.Util.extend({offset: anchor}, options);
 
-		if (!this._label) {
-			if (!options.noHide) {
-				this
-					.on('mouseover', this.showLabel, this)
-					.on('mouseout', this.hideLabel, this);
+		this._labelNoHide = options.noHide;
 
-				if (L.Browser.touch) {
-					this.on('click', this.showLabel, this);
-				}
+		if (!this._label) {
+			if (!this._labelNoHide) {
+				this._addLabelRevealHandlers();
 			}
 
 			this
 				.on('remove', this.hideLabel, this)
 				.on('move', this._moveLabel, this);
 
-			this._haslabelHandlers = true;
+			this._hasLabelHandlers = true;
 		}
 
 		this._label = new L.Label(options, this)
@@ -156,19 +204,17 @@ L.Marker.include({
 
 			this._label = null;
 
-			if (this._haslabelHandlers) {
+			if (this._hasLabelHandlers) {
+				if (!this._labelNoHide) {
+					this._removeLabelRevealHandlers();
+				}
+
 				this
-					.off('mouseover', this.showLabel)
-					.off('mouseout', this.hideLabel)
 					.off('remove', this.hideLabel)
 					.off('move', this._moveLabel);
-
-				if (L.Browser.touch) {
-					this.off('click', this.showLabel);
-				}
 			}
 
-			this._haslabelHandlers = false;
+			this._hasLabelHandlers = false;
 		}
 		return this;
 	},
@@ -179,8 +225,42 @@ L.Marker.include({
 		}
 	},
 
+	_addLabelRevealHandlers: function () {
+		this
+			.on('mouseover', this.showLabel, this)
+			.on('mouseout', this.hideLabel, this);
+
+		if (L.Browser.touch) {
+			this.on('click', this.showLabel, this);
+		}
+	},
+
+	_removeLabelRevealHandlers: function () {
+		this
+			.off('mouseover', this.showLabel)
+			.off('mouseout', this.hideLabel)
+			.off('remove', this.hideLabel)
+			.off('move', this._moveLabel);
+
+		if (L.Browser.touch) {
+			this.off('click', this.showLabel);
+		}
+	},
+
 	_moveLabel: function (e) {
 		this._label.setLatLng(e.latlng);
+	},
+
+	_originalUpdateZIndex: L.Marker.prototype._updateZIndex,
+
+	_updateZIndex: function (offset) {
+		var zIndex = this._zIndex + offset;
+
+		this._originalUpdateZIndex(offset);
+
+		if (this._label) {
+			this._label.updateZIndex(zIndex);
+		}
 	}
 });
 
@@ -269,6 +349,4 @@ L.FeatureGroup.include({
 	}
 });
 
-
-
-}(this));
+}(this, document));
