@@ -1,4 +1,11 @@
 var deps = {
+	Core: {
+		src: [
+			'Leaflet.label.js'
+		],
+		desc: 'The core of the plugin. Currently only includes the version.'
+	},
+
 	Label: {
 		src: [
 			'Label.js',
@@ -7,7 +14,8 @@ var deps = {
 			'Map.Label.js',
 			'FeatureGroup.Label.js'
 		],
-		desc: 'Leaflet.label plugin files.'
+		desc: 'Leaflet.label plugin files.',
+		deps: ['Core']
 	}
 };
 

@@ -1,65 +1,21 @@
-var build = require('./build/build.js'),
-	lint = require('./build/hint.js');
+/*
+Leaflet.label building and linting scripts.
 
-var COPYRIGHT = '/*\n Copyright (c) 2012, Smartrak, Jacob Toye\n' +
-	' Leaflet.label is an open-source JavaScript library for adding labels to markers and paths on leaflet powered maps.\n' +
-	' https://github.com/jacobtoye/Leaflet.label\n*/\n';
+To use, install Node, then run the following commands in the project root:
 
-desc('Check source for errors with JSHint');
-task('lint', function () {
-	var files = build.getFiles();
+    npm install -g jake
+    npm install uglify-js
+    npm install jshint
 
-	console.log('Checking for JS errors...');
+To check the code and build Leaflet.label from source, run "jake"
+*/
 
-	var errorsFound = lint.jshint(files);
+var build = require('./build/build.js');
 
-	if (errorsFound > 0) {
-		console.log(errorsFound + ' error(s) found.\n');
-		fail();
-	} else {
-		console.log('\tCheck passed');
-	}
-});
+desc('Check Leaflet.label source for errors with JSHint');
+task('lint', build.lint);
 
-desc('Combine and compress source files');
-task('build', ['lint'], function () {
-	var pathPart = 'dist/leaflet.label',
-		srcPath = pathPart + '-src.js',
-		path = pathPart + '.js';
-
-	var files = build.getFiles();
-
-	console.log('Concatenating ' + files.length + ' files...');
-	
-	var content = build.combineFiles(files);
-
-	var oldSrc = build.load(srcPath),
-		newSrc = COPYRIGHT + content,
-		srcDelta = build.getSizeDelta(newSrc, oldSrc);
-
-	console.log('\tUncompressed size: ' + newSrc.length + ' bytes (' + srcDelta + ')');
-
-	if (newSrc === oldSrc) {
-		console.log('\tNo changes');
-	} else {
-		build.save(srcPath, newSrc);
-		console.log('\tSaved to ' + srcPath);
-	}
-
-	console.log('Compressing...');
-
-	var oldCompressed = build.load(path),
-		newCompressed = COPYRIGHT + build.uglify(content),
-		delta = build.getSizeDelta(newCompressed, oldCompressed);
-
-	console.log('\tCompressed size: ' + newCompressed.length + ' bytes (' + delta + ')');
-
-	if (newCompressed === oldCompressed) {
-		console.log('\tNo changes');
-	} else {
-		build.save(path, newCompressed);
-		console.log('\tSaved to ' + path);
-	}
-});
+desc('Combine and compress Leaflet.label source files');
+task('build', ['lint'], build.build);
 
 task('default', ['build']);
