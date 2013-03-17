@@ -27,9 +27,9 @@ L.Path.include({
 			this._label = null;
 			this._showLabelAdded = false;
 			this
-				.off('mouseover', this._showLabel)
-				.off('mousemove', this._moveLabel)
-				.off('mouseout remove', this._hideLabel);
+				.off('mouseover', this._showLabel, this)
+				.off('mousemove', this._moveLabel, this)
+				.off('mouseout remove', this._hideLabel, this);
 		}
 		return this;
 	},

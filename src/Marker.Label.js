@@ -85,8 +85,8 @@ L.Marker.include({
 				}
 
 				this
-					.off('remove', this.hideLabel)
-					.off('move', this._moveLabel);
+					.off('remove', this.hideLabel, this)
+					.off('move', this._moveLabel, this);
 			}
 
 			this._hasLabelHandlers = false;
@@ -112,13 +112,13 @@ L.Marker.include({
 
 	_removeLabelRevealHandlers: function () {
 		this
-			.off('mouseover', this.showLabel)
-			.off('mouseout', this.hideLabel)
-			.off('remove', this.hideLabel)
-			.off('move', this._moveLabel);
+			.off('mouseover', this.showLabel, this)
+			.off('mouseout', this.hideLabel, this)
+			.off('remove', this.hideLabel, this)
+			.off('move', this._moveLabel, this);
 
 		if (L.Browser.touch) {
-			this.off('click', this.showLabel);
+			this.off('click', this.showLabel, this);
 		}
 	},
 
