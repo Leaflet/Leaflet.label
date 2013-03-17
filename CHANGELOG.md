@@ -13,6 +13,7 @@ An in-progress version being developed on the master branch.
 
  * Fixed labels not updating position after being dragged. (by [@snkashis](https://github.com/snkashis)). [#13](https://github.com/Leaflet/Leaflet.label/pull/13)
  * Z-Index fixes aimed at static labels. This will ensure that label is shown at the same level as the marker.
+ * Correctly remove event listeners in Marker.Label and Path.Label.
 
 ## 0.1.1 (December 10, 2012)
 
