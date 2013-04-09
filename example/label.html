@@ -29,6 +29,9 @@
 			.addTo(map)
 			.showLabel();
 
+		var m = L.marker(map.getCenter(), {draggable:true,opacity:0}).bindLabel('A hidden label!', { noHide: true, watchOpacity:true })
+			.addTo(map);
+			
 		// Move marker to confirm that label moves when marker moves (first click)
 		// Remove marker on click so we can check that the label is also removed (second click)
 		var clicks = 0;
