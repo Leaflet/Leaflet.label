@@ -30,6 +30,10 @@ L.Label = L.Popup.extend({
 			map.on('zoomanim', this._zoomAnimation, this);
 		}
 
+		if (L.Browser.touch && !this.options.noHide) {
+			L.DomEvent.on(this._container, 'click', this.close, this);
+		}
+
 		this._update();
 
 		if (animFade) {
@@ -56,6 +60,9 @@ L.Label = L.Popup.extend({
 
 	close: function () {
 		var map = this._map;
+		if (L.Browser.touch && !this.options.noHide) {
+			L.DomEvent.off(this._container, 'click', this.close);
+		}
 
 		if (map) {
 			map._label = null;
