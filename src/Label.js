@@ -4,7 +4,8 @@ L.Label = L.Popup.extend({
 		className: '',
 		closePopupOnClick: false,
 		noHide: false,
-		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
+		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
+		watchOpacity: false
 	},
 
 	onAdd: function (map) {
