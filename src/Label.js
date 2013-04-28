@@ -4,7 +4,8 @@ L.Label = L.Popup.extend({
 		className: '',
 		closePopupOnClick: false,
 		noHide: false,
-		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
+		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
+		opacity: 1
 	},
 
 	onAdd: function (map) {
@@ -36,9 +37,7 @@ L.Label = L.Popup.extend({
 
 		this._update();
 
-		if (animFade) {
-			L.DomUtil.setOpacity(this._container, 1);
-		}
+		this.setOpacity(this.options.opacity);
 	},
 
 	onRemove: function (map) {
@@ -76,6 +75,14 @@ L.Label = L.Popup.extend({
 
 		if (this._container) {
 			this._container.style.zIndex = zIndex;
+		}
+	},
+
+	setOpacity: function (opacity) {
+		this.options.opacity = opacity;
+
+		if (this._container) {
+			L.DomUtil.setOpacity(this._container, opacity);
 		}
 	},
 

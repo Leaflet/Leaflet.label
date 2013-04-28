@@ -136,5 +136,25 @@ L.Marker.include({
 		if (this._label) {
 			this._label.updateZIndex(zIndex);
 		}
+	},
+
+	_originalSetOpacity: L.Marker.prototype.setOpacity,
+
+	setOpacity: function (opacity, labelHasSemiTransparency) {
+		this.options.labelHasSemiTransparency = labelHasSemiTransparency;
+
+		this._originalSetOpacity(opacity);
+	},
+
+	_originalUpdateOpacity: L.Marker.prototype._updateOpacity,
+
+	_updateOpacity: function () {
+		var absoluteOpacity = this.options.opacity === 0 ? 0 : 1;
+
+		this._originalUpdateOpacity();
+
+		if (this._label) {
+			this._label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
+		}
 	}
 });
