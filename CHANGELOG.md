@@ -9,6 +9,7 @@ An in-progress version being developed on the master branch.
 
  * Added method `L.Marker.setLabelNoHide()` to allow toggling of static marker labels. (inspired by [@kpwebb](https://github.com/kpwebb)). [#20](https://github.com/Leaflet/Leaflet.label/pull/20)
  * Non-static labels will now hide when map container is tapped on touch devices. (by [@snkashis](https://github.com/snkashis)). [#26](https://github.com/Leaflet/Leaflet.label/pull/26)
+ * Added ability to set the opacity of the label along with the marker. (inspired by [@snkashis](https://github.com/snkashis)). [#20](https://github.com/Leaflet/Leaflet.label/pull/27)
 
 ### Bug fixes
 
