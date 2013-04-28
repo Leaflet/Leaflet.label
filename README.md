@@ -9,13 +9,13 @@ Check out the [demo](http://leaflet.github.com/Leaflet.label/).
 
 If you want to just bind a label to marker that will show when the mouse is over it, it's really easy:
 
-````
+````js
 L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 ````
 
 Path overlays works the same:
 
-````
+````js
 L.polyline([
 	[-37.7612, 175.2756],
 	[-37.7702, 175.2796],
@@ -25,7 +25,7 @@ L.polyline([
 
 If you would prefer the label to be always visible set the ````noHide: true```` option and call ````showLabel()```` once added to the map:
 
-````
+````js
 L.marker([-37.785, 175.263])
 	.bindLabel('A sweet static label!', { noHide: true })
 	.addTo(map)
@@ -47,7 +47,7 @@ The label is positioned relative to the L.Icon's ````iconAnchor```` option. To r
 
 E.g. Vertically center an icon with ````iconAnchor```` set as the center of the icon:
 
-````
+````js
 var myIcon = L.icon({
 	iconUrl: 'my-icon.png',
 	iconSize: [20, 20],
@@ -60,6 +60,26 @@ L.marker([-37.7772, 175.2606], {
 ````
 
 When positioning the label L.Label includes a 6px horizontal padding. you will need to take this into account when setting ````labelAnchor````.
+
+##Setting the opacity of a label
+
+You can set the opacity of a label by calling the `setOpacity` method on `L.Marker`. By default the opacity will either be **0** or **1**. 
+
+````js
+// Sets opacity of marker to 0.3 and opacity of label to 1
+markerLabel.setOpacity(0.3);
+
+// Sets opacity of marker to 0.3 and opacity of label to 0.3
+markerLabel.setOpacity(0.3, true);
+
+// Sets opacity of marker to 0 and opacity of label to 0
+markerLabel.setOpacity(0);
+markerLabel.setOpacity(0, true);
+
+// Sets opacity of marker to 1 and opacity of label to 1
+markerLabel.setOpacity(1);
+markerLabel.setOpacity(1, true);
+````
 
 ##Alternative label plugin
 
