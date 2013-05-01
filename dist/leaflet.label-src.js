@@ -11,7 +11,7 @@
  * Leaflet.label assumes that you have already included the Leaflet library.
  */
 
-L.labelVersion = '0.1.2-dev';
+L.labelVersion = '0.1.3';
 
 L.Label = L.Popup.extend({
 	options: {
@@ -19,7 +19,8 @@ L.Label = L.Popup.extend({
 		className: '',
 		closePopupOnClick: false,
 		noHide: false,
-		offset: new L.Point(12, -15) // 6 (width of the label triangle) + 6 (padding)
+		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
+		opacity: 1
 	},
 
 	onAdd: function (map) {
@@ -51,9 +52,7 @@ L.Label = L.Popup.extend({
 
 		this._update();
 
-		if (animFade) {
-			L.DomUtil.setOpacity(this._container, 1);
-		}
+		this.setOpacity(this.options.opacity);
 	},
 
 	onRemove: function (map) {
@@ -91,6 +90,14 @@ L.Label = L.Popup.extend({
 
 		if (this._container) {
 			this._container.style.zIndex = zIndex;
+		}
+	},
+
+	setOpacity: function (opacity) {
+		this.options.opacity = opacity;
+
+		if (this._container) {
+			L.DomUtil.setOpacity(this._container, opacity);
 		}
 	},
 
@@ -267,6 +274,26 @@ L.Marker.include({
 
 		if (this._label) {
 			this._label.updateZIndex(zIndex);
+		}
+	},
+
+	_originalSetOpacity: L.Marker.prototype.setOpacity,
+
+	setOpacity: function (opacity, labelHasSemiTransparency) {
+		this.options.labelHasSemiTransparency = labelHasSemiTransparency;
+
+		this._originalSetOpacity(opacity);
+	},
+
+	_originalUpdateOpacity: L.Marker.prototype._updateOpacity,
+
+	_updateOpacity: function () {
+		var absoluteOpacity = this.options.opacity === 0 ? 0 : 1;
+
+		this._originalUpdateOpacity();
+
+		if (this._label) {
+			this._label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
 		}
 	}
 });
