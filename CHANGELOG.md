@@ -5,6 +5,12 @@ Leaflet.draw Changelog
 
 An in-progress version being developed on the master branch.
 
+### Bug fixes
+
+ * Fixed error in IE < 9 when trying to set the label z-index. (by [@arthur-e](https://github.com/arthur-e)). [#13](https://github.com/Leaflet/Leaflet.label/pull/25)
+
+## 0.1.3 (May 02, 2013)
+
 ### Plugin improvements
 
  * Added method `L.Marker.setLabelNoHide()` to allow toggling of static marker labels. (inspired by [@kpwebb](https://github.com/kpwebb)). [#20](https://github.com/Leaflet/Leaflet.label/pull/20)
