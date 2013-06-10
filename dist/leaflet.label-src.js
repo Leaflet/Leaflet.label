@@ -11,7 +11,7 @@
  * Leaflet.label assumes that you have already included the Leaflet library.
  */
 
-L.labelVersion = '0.1.3';
+L.labelVersion = '0.1.4-dev';
 
 L.Label = L.Popup.extend({
 	options: {
@@ -88,7 +88,7 @@ L.Label = L.Popup.extend({
 	updateZIndex: function (zIndex) {
 		this._zIndex = zIndex;
 
-		if (this._container && zIndex !== undefined) {
+		if (this._container && this._zIndex) {
 			this._container.style.zIndex = zIndex;
 		}
 	},
