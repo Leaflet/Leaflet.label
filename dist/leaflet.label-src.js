@@ -88,7 +88,7 @@ L.Label = L.Popup.extend({
 	updateZIndex: function (zIndex) {
 		this._zIndex = zIndex;
 
-		if (this._container) {
+		if (this._container && zIndex !== undefined) {
 			this._container.style.zIndex = zIndex;
 		}
 	},
