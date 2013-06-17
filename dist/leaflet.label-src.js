@@ -74,11 +74,12 @@ L.Label = L.Popup.extend({
 
 	close: function () {
 		var map = this._map;
-		if (L.Browser.touch && !this.options.noHide) {
-			L.DomEvent.off(this._container, 'click', this.close);
-		}
 
 		if (map) {
+			if (L.Browser.touch && !this.options.noHide) {
+				L.DomEvent.off(this._container, 'click', this.close);
+			}
+
 			map._label = null;
 
 			map.removeLayer(this);
