@@ -113,9 +113,7 @@ L.Marker.include({
 	_removeLabelRevealHandlers: function () {
 		this
 			.off('mouseover', this.showLabel, this)
-			.off('mouseout', this.hideLabel, this)
-			.off('remove', this.hideLabel, this)
-			.off('move', this._moveLabel, this);
+			.off('mouseout', this.hideLabel, this);
 
 		if (L.Browser.touch) {
 			this.off('click', this.showLabel, this);
