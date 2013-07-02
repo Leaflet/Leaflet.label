@@ -21,6 +21,10 @@
 	z-index: 6;
 }
 
+.leaflet-label.leaflet-clickable {
+	cursor: pointer;
+}
+
 .leaflet-label:before {
 	border-right: 6px solid black;
 	border-right-color: inherit;
