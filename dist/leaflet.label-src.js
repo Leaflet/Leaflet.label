@@ -14,9 +14,13 @@
 L.labelVersion = '0.1.4-dev';
 
 L.Label = L.Popup.extend({
+
+	includes: L.Mixin.Events,
+
 	options: {
 		autoPan: false,
 		className: '',
+		clickable: false,
 		closePopupOnClick: false,
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
@@ -50,6 +54,8 @@ L.Label = L.Popup.extend({
 			L.DomEvent.on(this._container, 'click', this.close, this);
 		}
 
+		this._initInteraction();
+
 		this._update();
 
 		this.setOpacity(this.options.opacity);
@@ -68,6 +74,8 @@ L.Label = L.Popup.extend({
 		if (map.options.fadeAnimation) {
 			L.DomUtil.setOpacity(this._container, 0);
 		}
+
+		this._removeInteraction();
 
 		this._map = null;
 	},
@@ -135,6 +143,61 @@ L.Label = L.Popup.extend({
 		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center);
 
 		this._setPosition(pos);
+	},
+
+	_initInteraction: function () {
+		if (!this.options.clickable) { return; }
+
+		var container = this._container,
+			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
+
+		L.DomUtil.addClass(container, 'leaflet-clickable');
+		L.DomEvent.on(container, 'click', this._onMouseClick, this);
+
+		for (var i = 0; i < events.length; i++) {
+			L.DomEvent.on(container, events[i], this._fireMouseEvent, this);
+		}
+	},
+
+	_removeInteraction: function () {
+		if (!this.options.clickable) { return; }
+
+		var container = this._container,
+			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
+
+		L.DomUtil.removeClass(container, 'leaflet-clickable');
+		L.DomEvent.off(container, 'click', this._onMouseClick, this);
+
+		for (var i = 0; i < events.length; i++) {
+			L.DomEvent.off(container, events[i], this._fireMouseEvent, this);
+		}
+	},
+
+	_onMouseClick: function (e) {
+		if (this.hasEventListeners(e.type)) {
+			L.DomEvent.stopPropagation(e);
+		}
+
+		this.fire(e.type, {
+			originalEvent: e
+		});
+	},
+
+	_fireMouseEvent: function (e) {
+		this.fire(e.type, {
+			originalEvent: e
+		});
+
+		// TODO proper custom event propagation
+		// this line will always be called if marker is in a FeatureGroup
+		if (e.type === 'contextmenu' && this.hasEventListeners(e.type)) {
+			L.DomEvent.preventDefault(e);
+		}
+		if (e.type !== 'mousedown') {
+			L.DomEvent.stopPropagation(e);
+		} else {
+			L.DomEvent.preventDefault(e);
+		}
 	}
 });
 
@@ -240,6 +303,10 @@ L.Marker.include({
 		}
 	},
 
+	getLabel: function () {
+		return this._label;
+	},
+
 	_addLabelRevealHandlers: function () {
 		this
 			.on('mouseover', this.showLabel, this)
@@ -253,9 +320,7 @@ L.Marker.include({
 	_removeLabelRevealHandlers: function () {
 		this
 			.off('mouseover', this.showLabel, this)
-			.off('mouseout', this.hideLabel, this)
-			.off('remove', this.hideLabel, this)
-			.off('move', this._moveLabel, this);
+			.off('mouseout', this.hideLabel, this);
 
 		if (L.Browser.touch) {
 			this.off('click', this.showLabel, this);
