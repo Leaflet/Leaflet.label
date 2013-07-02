@@ -100,6 +100,10 @@ L.Marker.include({
 		}
 	},
 
+	getLabel: function (){
+		return this._label;
+	},
+
 	_addLabelRevealHandlers: function () {
 		this
 			.on('mouseover', this.showLabel, this)
