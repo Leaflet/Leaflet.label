@@ -133,7 +133,7 @@ L.Label = L.Popup.extend({
 	_initInteraction: function () {
 		if (!this.options.clickable) { return; }
 
-		var container = this._container;
+		var container = this._container,
 			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
 
 		L.DomUtil.addClass(container, 'leaflet-clickable');
@@ -147,7 +147,7 @@ L.Label = L.Popup.extend({
 	_removeInteraction: function () {
 		if (!this.options.clickable) { return; }
 
-		var container = this._container;
+		var container = this._container,
 			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
 
 		L.DomUtil.removeClass(container, 'leaflet-clickable');

@@ -100,7 +100,7 @@ L.Marker.include({
 		}
 	},
 
-	getLabel: function (){
+	getLabel: function () {
 		return this._label;
 	},
 
