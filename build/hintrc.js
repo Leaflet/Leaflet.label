@@ -45,3 +45,7 @@ exports.config = {
 	"white": true,
 	"smarttabs": true
 };
+
+exports.globals = {
+	'L': false
+}
