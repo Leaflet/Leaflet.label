@@ -73,8 +73,6 @@ L.Label = L.Popup.extend({
 				L.DomEvent.off(this._container, 'click', this.close);
 			}
 
-			map._label = null;
-
 			map.removeLayer(this);
 		}
 	},
