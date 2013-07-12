@@ -3,7 +3,7 @@ var fs = require('fs'),
     UglifyJS = require('uglify-js'),
 
     deps = require('./deps.js').deps,
-    hintrc = require('./hintrc.js').config;
+    hintrc = require('./hintrc.js');
 
 
 function lintFiles(files) {
@@ -13,7 +13,7 @@ function lintFiles(files) {
 
 	for (i = 0, len = files.length; i < len; i++) {
 
-		jshint.JSHINT(fs.readFileSync(files[i], 'utf8'), hintrc);
+		jshint.JSHINT(fs.readFileSync(files[i], 'utf8'), hintrc.config, hintrc.globals);
 		errors = jshint.JSHINT.errors;
 
 		for (j = 0, len2 = errors.length; j < len2; j++) {
