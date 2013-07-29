@@ -83,8 +83,14 @@ L.Label = L.Popup.extend({
 	},
 
 	_initLayout: function () {
-		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
-		this.updateZIndex(this._zIndex);
+        if (this.options.labelClassName != null) {
+            var labelClass = this.options.labelClassName;
+        } else {    
+            var labelClass = "leaflet-label";
+        }
+       
+        this._container=L.DomUtil.create("div", labelClass + " " + this.options.className+" leaflet-zoom-animated"), 
+        this.updateZIndex(this._zIndex)
 	},
 
 	_updateContent: function () {
