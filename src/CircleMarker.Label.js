@@ -21,12 +21,11 @@ L.CircleMarker.include({
         }
                            
         options = L.Util.extend({offset: anchor}, options);
-        this
-            ._label=new L.Label(options,this)
-            ._label.setContent(content)
-            ._showLabelAdded
-            ._showLabel
-            ._labelNoHide = options.noHide;
+        this._label=new L.Label(options,this);
+        this._label.setContent(content);
+        this._showLabelAdded;
+        this._showLabel;
+        this._labelNoHide = options.noHide;
                            
         if (!this._label) {
             if (!this._labelNoHide) {
@@ -41,18 +40,19 @@ L.CircleMarker.include({
         }
            
         if (!this._showLabelAdded) {
-             if (!this._labelNoHide) {
+                           
+            if (!this._labelNoHide && !options.mobile) {
                 this.on('mouseover', this._showLabel, this);
                 this.on('mousemove', this._moveLabel, this);           
                 this.on('mouseout remove', this._hideLabel, this);
-             }
+            }
                            
             if (L.Browser.touch) {
                 this.on('click', this._showLabel, this);
             }
                            
             this._showLabelAdded = true;
-        }                           
+        }                          
                            
         this._label = new L.Label(options, this)
         .setContent(content);
