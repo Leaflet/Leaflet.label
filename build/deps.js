@@ -11,6 +11,7 @@ var deps = {
 			'Label.js',
 			'Marker.Label.js',
 			'Path.Label.js',
+			'CircleMarker.Label.js',
 			'Map.Label.js',
 			'FeatureGroup.Label.js'
 		],
