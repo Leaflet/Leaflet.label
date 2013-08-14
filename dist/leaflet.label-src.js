@@ -37,11 +37,6 @@ L.Label = L.Popup.extend({
 		}
 		this._updateContent();
 
-		var animFade = map.options.fadeAnimation;
-
-		if (animFade) {
-			L.DomUtil.setOpacity(this._container, 0);
-		}
 		this._pane.appendChild(this._container);
 
 		map.on('viewreset', this._updatePosition, this);
@@ -64,16 +59,10 @@ L.Label = L.Popup.extend({
 	onRemove: function (map) {
 		this._pane.removeChild(this._container);
 
-		L.Util.falseFn(this._container.offsetWidth); // force reflow
-
 		map.off({
 			viewreset: this._updatePosition,
 			zoomanim: this._zoomAnimation
 		}, this);
-
-		if (map.options.fadeAnimation) {
-			L.DomUtil.setOpacity(this._container, 0);
-		}
 
 		this._removeInteraction();
 
@@ -87,8 +76,6 @@ L.Label = L.Popup.extend({
 			if (L.Browser.touch && !this.options.noHide) {
 				L.DomEvent.off(this._container, 'click', this.close);
 			}
-
-			map._label = null;
 
 			map.removeLayer(this);
 		}
@@ -420,10 +407,76 @@ L.Path.include({
 	}
 });
 
+L.CircleMarker.include({
+	showLabel: function () {
+		if (this._label && this._map) {
+			this._label.setLatLng(this._latlng);
+			this._map.showLabel(this._label);
+		}
+
+		return this;
+	},
+
+	hideLabel: function () {
+		if (this._label) {
+			this._label.close();
+		}
+		return this;
+	},
+
+	setLabelNoHide: function (noHide) {
+		if (this._labelNoHide === noHide) {
+			return;
+		}
+
+		this._labelNoHide = noHide;
+
+		if (noHide) {
+			this._removeLabelRevealHandlers();
+			this.showLabel();
+		} else {
+			this._addLabelRevealHandlers();
+			this.hideLabel();
+		}
+	},
+
+	updateLabelContent: function (content) {
+		if (this._label) {
+			this._label.setContent(content);
+		}
+	},
+
+	getLabel: function () {
+		return this._label;
+	},
+
+	_addLabelRevealHandlers: function () {
+		this
+			.on('mouseover', this.showLabel, this)
+			.on('mouseout', this.hideLabel, this);
+
+		if (L.Browser.touch) {
+			this.on('click', this.showLabel, this);
+		}
+	},
+
+	_removeLabelRevealHandlers: function () {
+		this
+			.off('mouseover', this.showLabel, this)
+			.off('mouseout', this.hideLabel, this);
+
+		if (L.Browser.touch) {
+			this.off('click', this.showLabel, this);
+		}
+	},
+
+	_moveLabel: function (e) {
+		this._label.setLatLng(e.latlng);
+	}
+});
+
 L.Map.include({
 	showLabel: function (label) {
-		this._label = label;
-
 		return this.addLayer(label);
 	}
 });
