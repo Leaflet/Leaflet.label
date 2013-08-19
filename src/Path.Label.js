@@ -1,10 +1,10 @@
 L.Path.include({
 	bindLabel: function (content, options) {
-		if (!this._label || this._label.options !== options) {
-			this._label = new L.Label(options, this);
+		if (!this.label || this.label.options !== options) {
+			this.label = new L.Label(options, this);
 		}
 
-		this._label.setContent(content);
+		this.label.setContent(content);
 
 		if (!this._showLabelAdded) {
 			this
@@ -22,9 +22,9 @@ L.Path.include({
 	},
 
 	unbindLabel: function () {
-		if (this._label) {
+		if (this.label) {
 			this._hideLabel();
-			this._label = null;
+			this.label = null;
 			this._showLabelAdded = false;
 			this
 				.off('mouseover', this._showLabel, this)
@@ -35,21 +35,21 @@ L.Path.include({
 	},
 
 	updateLabelContent: function (content) {
-		if (this._label) {
-			this._label.setContent(content);
+		if (this.label) {
+			this.label.setContent(content);
 		}
 	},
 
 	_showLabel: function (e) {
-		this._label.setLatLng(e.latlng);
-		this._map.showLabel(this._label);
+		this.label.setLatLng(e.latlng);
+		this._map.showLabel(this.label);
 	},
 
 	_moveLabel: function (e) {
-		this._label.setLatLng(e.latlng);
+		this.label.setLatLng(e.latlng);
 	},
 
 	_hideLabel: function () {
-		this._label.close();
+		this.label.close();
 	}
 });

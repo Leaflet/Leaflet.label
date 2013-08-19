@@ -11,17 +11,17 @@ L.Marker.mergeOptions({
 
 L.Marker.include({
 	showLabel: function () {
-		if (this._label && this._map) {
-			this._label.setLatLng(this._latlng);
-			this._map.showLabel(this._label);
+		if (this.label && this._map) {
+			this.label.setLatLng(this._latlng);
+			this._map.showLabel(this.label);
 		}
 
 		return this;
 	},
 
 	hideLabel: function () {
-		if (this._label) {
-			this._label.close();
+		if (this.label) {
+			this.label.close();
 		}
 		return this;
 	},
@@ -55,7 +55,7 @@ L.Marker.include({
 
 		this._labelNoHide = options.noHide;
 
-		if (!this._label) {
+		if (!this.label) {
 			if (!this._labelNoHide) {
 				this._addLabelRevealHandlers();
 			}
@@ -67,17 +67,17 @@ L.Marker.include({
 			this._hasLabelHandlers = true;
 		}
 
-		this._label = new L.Label(options, this)
+		this.label = new L.Label(options, this)
 			.setContent(content);
 
 		return this;
 	},
 
 	unbindLabel: function () {
-		if (this._label) {
+		if (this.label) {
 			this.hideLabel();
 
-			this._label = null;
+			this.label = null;
 
 			if (this._hasLabelHandlers) {
 				if (!this._labelNoHide) {
@@ -95,13 +95,13 @@ L.Marker.include({
 	},
 
 	updateLabelContent: function (content) {
-		if (this._label) {
-			this._label.setContent(content);
+		if (this.label) {
+			this.label.setContent(content);
 		}
 	},
 
 	getLabel: function () {
-		return this._label;
+		return this.label;
 	},
 
 	_addLabelRevealHandlers: function () {
@@ -125,7 +125,7 @@ L.Marker.include({
 	},
 
 	_moveLabel: function (e) {
-		this._label.setLatLng(e.latlng);
+		this.label.setLatLng(e.latlng);
 	},
 
 	_originalUpdateZIndex: L.Marker.prototype._updateZIndex,
@@ -135,8 +135,8 @@ L.Marker.include({
 
 		this._originalUpdateZIndex(offset);
 
-		if (this._label) {
-			this._label.updateZIndex(zIndex);
+		if (this.label) {
+			this.label.updateZIndex(zIndex);
 		}
 	},
 
@@ -155,8 +155,8 @@ L.Marker.include({
 
 		this._originalUpdateOpacity();
 
-		if (this._label) {
-			this._label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
+		if (this.label) {
+			this.label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
 		}
 	}
 });
