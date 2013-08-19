@@ -62,7 +62,8 @@ L.Marker.include({
 
 			this
 				.on('remove', this.hideLabel, this)
-				.on('move', this._moveLabel, this);
+				.on('move', this._moveLabel, this)
+				.on('add', this._onMarkerAdd, this);
 
 			this._hasLabelHandlers = true;
 		}
@@ -86,7 +87,8 @@ L.Marker.include({
 
 				this
 					.off('remove', this.hideLabel, this)
-					.off('move', this._moveLabel, this);
+					.off('move', this._moveLabel, this)
+					.off('add', this._onMarkerAdd, this);
 			}
 
 			this._hasLabelHandlers = false;
@@ -102,6 +104,12 @@ L.Marker.include({
 
 	getLabel: function () {
 		return this.label;
+	},
+
+	_onMarkerAdd: function () {
+		if (this._labelNoHide) {
+			this.showLabel();
+		}
 	},
 
 	_addLabelRevealHandlers: function () {
