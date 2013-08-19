@@ -7,7 +7,8 @@ L.Label = L.Class.extend({
 		clickable: false,
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
-		opacity: 1
+		opacity: 1,
+		zoomAnimation: true
 	},
 
 	initialize: function (options, source) {
