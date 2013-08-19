@@ -9,7 +9,8 @@ L.Label = L.Popup.extend({
 		closePopupOnClick: false,
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
-		opacity: 1
+		opacity: 1,
+		flip: false
 	},
 
 	onAdd: function (map) {
@@ -106,7 +107,24 @@ L.Label = L.Popup.extend({
 	},
 
 	_setPosition: function (pos) {
-		pos = pos.add(this.options.offset);
+		if (!this.options.flip) {
+			pos = pos.add(this.options.offset);
+		} else {
+			var pixelCenter = this._map.latLngToLayerPoint(this._map.getCenter()), flipX;
+				// Feature detection: IE8 and earlier do not support getComputedStyle
+				if(typeof getComputedStyle === 'undefined') {
+					flipX = new L.Point(
+						-this.options.offset.x - this._container.offsetWidth,
+						this.options.offset.y
+					);
+				} else {
+					var computedStyle = getComputedStyle(this._container);
+					var widthProperty = computedStyle.getPropertyValue('width');
+					var width = widthProperty.replace('px','');
+					flipX = new L.Point(-22 - this.options.offset.x - width, this.options.offset.y)
+				};
+				pos = pos.add(flipX);
+		}
 
 		L.DomUtil.setPosition(this._container, pos);
 	},
