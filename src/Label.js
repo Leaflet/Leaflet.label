@@ -1,15 +1,21 @@
-L.Label = L.Popup.extend({
+L.Label = L.Class.extend({
 
 	includes: L.Mixin.Events,
 
 	options: {
-		autoPan: false,
 		className: '',
 		clickable: false,
-		closePopupOnClick: false,
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1
+	},
+
+	initialize: function (options, source) {
+		L.setOptions(this, options);
+
+		this._source = source;
+		this._animated = L.Browser.any3d && this.options.zoomAnimation;
+		this._isOpen = false;
 	},
 
 	onAdd: function (map) {
@@ -54,6 +60,18 @@ L.Label = L.Popup.extend({
 		this._map = null;
 	},
 
+	setLatLng: function (latlng) {
+		this._latlng = L.latLng(latlng);
+		this._update();
+		return this;
+	},
+
+	setContent: function (content) {
+		this._content = content;
+		this._update();
+		return this;
+	},
+
 	close: function () {
 		var map = this._map;
 
@@ -87,16 +105,23 @@ L.Label = L.Popup.extend({
 		this.updateZIndex(this._zIndex);
 	},
 
+	_update: function () {
+		if (!this._map) { return; }
+
+		this._container.style.visibility = 'hidden';
+
+		this._updateContent();
+		this._updatePosition();
+
+		this._container.style.visibility = '';
+	},
+
 	_updateContent: function () {
 		if (!this._content) { return; }
 
 		if (typeof this._content === 'string') {
 			this._container.innerHTML = this._content;
 		}
-	},
-
-	_updateLayout: function () {
-		// Do nothing
 	},
 
 	_updatePosition: function () {
