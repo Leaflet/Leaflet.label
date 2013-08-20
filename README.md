@@ -39,6 +39,23 @@ When you call ````bindLabel()```` you can pass in an options object. These optio
 
  - **noHide**: doesn't attach event handler for showing/hiding the label on mouseover/out.
  - **className**: the css class to add to the label element
+ - **direction**: one of `left`|`right`(default)|`auto`. The direction the label displays in relation to the marker. `auto` will choose the optimal direction depending on the position of the marker.
+
+E.g. To create a static label that automatically positions the label
+
+````js
+var myIcon = L.icon({
+	iconUrl: 'my-icon.png',
+	iconSize: [20, 20],
+	iconAnchor: [10, 10],
+	labelAnchor: [6, 0] // as I want the label to appear 2px past the icon (10 + 2 - 6)
+});
+L.marker([-37.7772, 175.2606], {
+	icon: myIcon
+}).bindLabel('My label', {
+	noHide: true,
+	direction: 'auto'
+});
 
 ##Positioning the label for custom icons
 
