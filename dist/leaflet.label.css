@@ -25,13 +25,29 @@
 	cursor: pointer;
 }
 
+.leaflet-label:before,
+.leaflet-label:after {
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	content: none;
+	position: absolute;
+	top: 5px;
+}
+
 .leaflet-label:before {
 	border-right: 6px solid black;
 	border-right-color: inherit;
-	border-top: 6px solid transparent;
-	border-bottom: 6px solid transparent;
-	content: "";
-	position: absolute;
-	top: 5px;
 	left: -10px;
+}
+
+.leaflet-label:after,
+.ie_after {
+	border-left: 6px solid black;
+	border-left-color: inherit;
+	right: -10px;
+}
+
+.leaflet-label-right:before,
+.leaflet-label-left:after {
+	content: "";
 }
