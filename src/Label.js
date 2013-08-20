@@ -20,6 +20,22 @@ L.Label = L.Class.extend({
 		this._isOpen = false;
 	},
 
+	_clickFunction: function() {
+		return;
+	},
+
+	_handleClick: function() {
+		if (typeof this._clickFunction == "function") {
+			this._clickFunction();
+		}
+	},
+
+	setClickCallback: function (f) {
+		if (f) {
+			this._clickFunction = f;
+		} 
+	},
+
 	onAdd: function (map) {
 		this._map = map;
 
@@ -40,6 +56,8 @@ L.Label = L.Class.extend({
 
 		if (L.Browser.touch && !this.options.noHide) {
 			L.DomEvent.on(this._container, 'click', this.close, this);
+		} else {
+			L.DomEvent.on(this._container, 'click', this._clickFunction, this);
 		}
 
 		this._initInteraction();
@@ -80,6 +98,8 @@ L.Label = L.Class.extend({
 		if (map) {
 			if (L.Browser.touch && !this.options.noHide) {
 				L.DomEvent.off(this._container, 'click', this.close);
+			} else {
+				L.DomEvent.off(this._container, 'click', this._handleClick, this);
 			}
 
 			map.removeLayer(this);
