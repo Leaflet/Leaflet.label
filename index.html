@@ -3,11 +3,11 @@
 <head>
 	<title>Leaflet.label</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
-	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" /><![endif]-->
+	<link rel="stylesheet" href="leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="leaflet.ie.css" /><![endif]-->
 	<link rel="stylesheet" href="leaflet.label.css" />
 	
-	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+	<script src="leaflet.js"></script>
 	<script src="leaflet.label.js"></script>
 </head>
 <body>
@@ -20,6 +20,8 @@
 			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
 		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
+
+		L.circleMarker([-37.7612, 175.2856], { color: "#f00", radius: 12 }).bindLabel( "Hello World", { direction: 'left' }).addTo(map);
 
 		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel('A sweet static label!', { noHide: true })
 			.addTo(map)
@@ -43,7 +45,7 @@
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750]
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map);
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.', { direction: 'auto' }).addTo(map);
 
 		// Remove polyline on click so we can check that the label is also removed
 		p.on('click', function () { map.removeLayer(p); });
