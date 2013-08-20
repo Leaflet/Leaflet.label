@@ -1,6 +1,8 @@
 Leaflet.label
 =============
 
+**NOTE: lastest Leaflet.label master requires Leaflet 0.7-dev**
+
 Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet powered maps.
 
 Check out the [demo](http://leaflet.github.com/Leaflet.label/).
@@ -28,11 +30,8 @@ If you would prefer the label to be always visible set the ````noHide: true```` 
 ````js
 L.marker([-37.785, 175.263])
 	.bindLabel('A sweet static label!', { noHide: true })
-	.addTo(map)
-	.showLabel();
+	.addTo(map);
 ````
-
-*N.B.* if you call `showLabel()` before it is added to the map the label will not show.
 
 ##Options
 
