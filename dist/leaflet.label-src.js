@@ -11,7 +11,7 @@
  * Leaflet.label assumes that you have already included the Leaflet library.
  */
 
-L.labelVersion = '0.1.4-dev';
+L.labelVersion = '0.2.0-dev';
 
 L.Label = L.Class.extend({
 
@@ -241,18 +241,8 @@ L.Label = L.Class.extend({
 	}
 });
 
-// Add in an option to icon that is used to set where the label anchor is
-L.Icon.Default.mergeOptions({
-	labelAnchor: new L.Point(9, -20)
-});
-
-// Have to do this since Leaflet is loaded before this plugin and initializes
-// L.Marker.options.icon therefore missing our mixin above.
-L.Marker.mergeOptions({
-	icon: new L.Icon.Default()
-});
-
-L.Marker.include({
+// This object is a mixin for L.Marker and L.CircleMarker. We declare it here as both need to include the contents.
+L.BaseMarkerMethods = {
 	showLabel: function () {
 		if (this.label && this._map) {
 			this.label.setLatLng(this._latlng);
@@ -286,7 +276,8 @@ L.Marker.include({
 	},
 
 	bindLabel: function (content, options) {
-		var anchor = L.point(this.options.icon.options.labelAnchor) || new L.Point(0, 0);
+		var labelAnchor = this.options.icon ? this.options.icon.options.labelAnchor : null,
+			anchor = L.point(labelAnchor) || L.point(0, 0);
 
 		anchor = anchor.add(L.Label.prototype.options.offset);
 
@@ -377,8 +368,22 @@ L.Marker.include({
 
 	_moveLabel: function (e) {
 		this.label.setLatLng(e.latlng);
-	},
+	}
+};
 
+// Add in an option to icon that is used to set where the label anchor is
+L.Icon.Default.mergeOptions({
+	labelAnchor: new L.Point(9, -20)
+});
+
+// Have to do this since Leaflet is loaded before this plugin and initializes
+// L.Marker.options.icon therefore missing our mixin above.
+L.Marker.mergeOptions({
+	icon: new L.Icon.Default()
+});
+
+L.Marker.include(L.BaseMarkerMethods);
+L.Marker.include({
 	_originalUpdateZIndex: L.Marker.prototype._updateZIndex,
 
 	_updateZIndex: function (offset) {
@@ -411,6 +416,8 @@ L.Marker.include({
 		}
 	}
 });
+
+L.CircleMarker.include(L.BaseMarkerMethods);
 
 L.Path.include({
 	bindLabel: function (content, options) {
