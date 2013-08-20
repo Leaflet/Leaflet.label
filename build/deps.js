@@ -9,7 +9,9 @@ var deps = {
 	Label: {
 		src: [
 			'Label.js',
+			'BaseMarkerMethods.js',
 			'Marker.Label.js',
+			'CircleMarker.Label.js',
 			'Path.Label.js',
 			'Map.Label.js',
 			'FeatureGroup.Label.js'
