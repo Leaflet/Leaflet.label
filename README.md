@@ -56,6 +56,7 @@ L.marker([-37.7772, 175.2606], {
 	noHide: true,
 	direction: 'auto'
 });
+````
 
 ##Positioning the label for custom icons
 
