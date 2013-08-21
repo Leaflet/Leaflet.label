@@ -32,9 +32,9 @@ L.Label = L.Class.extend({
 
 		this._pane.appendChild(this._container);
 
-		map.on('moveend', this._onMoveEnd, this);
-		
-		map.on('viewreset', this._onViewReset, this);
+		map
+			.on('moveend', this._onMoveEnd, this)
+			.on('viewreset', this._onViewReset, this);
 
 		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
