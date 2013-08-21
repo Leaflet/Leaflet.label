@@ -11,20 +11,28 @@
  * Leaflet.label assumes that you have already included the Leaflet library.
  */
 
-L.labelVersion = '0.1.4-dev';
+L.labelVersion = '0.2.0-dev';
 
-L.Label = L.Popup.extend({
+L.Label = L.Class.extend({
 
 	includes: L.Mixin.Events,
 
 	options: {
-		autoPan: false,
 		className: '',
 		clickable: false,
-		closePopupOnClick: false,
+		direction: 'right',
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
-		opacity: 1
+		opacity: 1,
+		zoomAnimation: true
+	},
+
+	initialize: function (options, source) {
+		L.setOptions(this, options);
+
+		this._source = source;
+		this._animated = L.Browser.any3d && this.options.zoomAnimation;
+		this._isOpen = false;
 	},
 
 	onAdd: function (map) {
@@ -37,14 +45,9 @@ L.Label = L.Popup.extend({
 		}
 		this._updateContent();
 
-		var animFade = map.options.fadeAnimation;
-
-		if (animFade) {
-			L.DomUtil.setOpacity(this._container, 0);
-		}
 		this._pane.appendChild(this._container);
 
-		map.on('viewreset', this._updatePosition, this);
+		map.on('moveend', this._onMoveEnd, this);
 
 		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
@@ -64,20 +67,26 @@ L.Label = L.Popup.extend({
 	onRemove: function (map) {
 		this._pane.removeChild(this._container);
 
-		L.Util.falseFn(this._container.offsetWidth); // force reflow
-
 		map.off({
-			viewreset: this._updatePosition,
-			zoomanim: this._zoomAnimation
+			zoomanim: this._zoomAnimation,
+			moveend: this._onMoveEnd
 		}, this);
-
-		if (map.options.fadeAnimation) {
-			L.DomUtil.setOpacity(this._container, 0);
-		}
 
 		this._removeInteraction();
 
 		this._map = null;
+	},
+
+	setLatLng: function (latlng) {
+		this._latlng = L.latLng(latlng);
+		this._update();
+		return this;
+	},
+
+	setContent: function (content) {
+		this._content = content;
+		this._update();
+		return this;
 	},
 
 	close: function () {
@@ -87,8 +96,6 @@ L.Label = L.Popup.extend({
 			if (L.Browser.touch && !this.options.noHide) {
 				L.DomEvent.off(this._container, 'click', this.close);
 			}
-
-			map._label = null;
 
 			map.removeLayer(this);
 		}
@@ -115,16 +122,25 @@ L.Label = L.Popup.extend({
 		this.updateZIndex(this._zIndex);
 	},
 
+	_update: function () {
+		if (!this._map) { return; }
+
+		this._container.style.visibility = 'hidden';
+
+		this._updateContent();
+		this._updatePosition();
+
+		this._container.style.visibility = '';
+	},
+
 	_updateContent: function () {
 		if (!this._content) { return; }
 
 		if (typeof this._content === 'string') {
 			this._container.innerHTML = this._content;
-		}
-	},
 
-	_updateLayout: function () {
-		// Do nothing
+			this._labelWidth = this._container.offsetWidth;
+		}
 	},
 
 	_updatePosition: function () {
@@ -134,15 +150,39 @@ L.Label = L.Popup.extend({
 	},
 
 	_setPosition: function (pos) {
-		pos = pos.add(this.options.offset);
+		var map = this._map,
+			container = this._container,
+			centerPoint = map.latLngToContainerPoint(map.getCenter()),
+			labelPoint = map.layerPointToContainerPoint(pos),
+			direction = this.options.direction,
+			labelWidth = this._labelWidth;
 
-		L.DomUtil.setPosition(this._container, pos);
+		// position to the right (right or auto & needs to)
+		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
+			L.DomUtil.addClass(container, 'leaflet-label-right');
+			L.DomUtil.removeClass(container, 'leaflet-label-left');
+
+			pos = pos.add(this.options.offset);
+		} else { // position to the left
+			L.DomUtil.addClass(container, 'leaflet-label-left');
+			L.DomUtil.removeClass(container, 'leaflet-label-right');
+
+			pos = pos.add(L.point(-this.options.offset.x - labelWidth, this.options.offset.y));
+		}
+
+		L.DomUtil.setPosition(container, pos);
 	},
 
 	_zoomAnimation: function (opt) {
 		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center);
 
 		this._setPosition(pos);
+	},
+
+	_onMoveEnd: function () {
+		if (!this._animated || this.options.direction === 'auto') {
+			this._updatePosition();
+		}
 	},
 
 	_initInteraction: function () {
@@ -201,30 +241,20 @@ L.Label = L.Popup.extend({
 	}
 });
 
-// Add in an option to icon that is used to set where the label anchor is
-L.Icon.Default.mergeOptions({
-	labelAnchor: new L.Point(9, -20)
-});
-
-// Have to do this since Leaflet is loaded before this plugin and initializes
-// L.Marker.options.icon therefore missing our mixin above.
-L.Marker.mergeOptions({
-	icon: new L.Icon.Default()
-});
-
-L.Marker.include({
+// This object is a mixin for L.Marker and L.CircleMarker. We declare it here as both need to include the contents.
+L.BaseMarkerMethods = {
 	showLabel: function () {
-		if (this._label && this._map) {
-			this._label.setLatLng(this._latlng);
-			this._map.showLabel(this._label);
+		if (this.label && this._map) {
+			this.label.setLatLng(this._latlng);
+			this._map.showLabel(this.label);
 		}
 
 		return this;
 	},
 
 	hideLabel: function () {
-		if (this._label) {
-			this._label.close();
+		if (this.label) {
+			this.label.close();
 		}
 		return this;
 	},
@@ -246,7 +276,8 @@ L.Marker.include({
 	},
 
 	bindLabel: function (content, options) {
-		var anchor = L.point(this.options.icon.options.labelAnchor) || new L.Point(0, 0);
+		var labelAnchor = this.options.icon ? this.options.icon.options.labelAnchor : null,
+			anchor = L.point(labelAnchor) || L.point(0, 0);
 
 		anchor = anchor.add(L.Label.prototype.options.offset);
 
@@ -258,29 +289,30 @@ L.Marker.include({
 
 		this._labelNoHide = options.noHide;
 
-		if (!this._label) {
+		if (!this.label) {
 			if (!this._labelNoHide) {
 				this._addLabelRevealHandlers();
 			}
 
 			this
 				.on('remove', this.hideLabel, this)
-				.on('move', this._moveLabel, this);
+				.on('move', this._moveLabel, this)
+				.on('add', this._onMarkerAdd, this);
 
 			this._hasLabelHandlers = true;
 		}
 
-		this._label = new L.Label(options, this)
+		this.label = new L.Label(options, this)
 			.setContent(content);
 
 		return this;
 	},
 
 	unbindLabel: function () {
-		if (this._label) {
+		if (this.label) {
 			this.hideLabel();
 
-			this._label = null;
+			this.label = null;
 
 			if (this._hasLabelHandlers) {
 				if (!this._labelNoHide) {
@@ -289,7 +321,8 @@ L.Marker.include({
 
 				this
 					.off('remove', this.hideLabel, this)
-					.off('move', this._moveLabel, this);
+					.off('move', this._moveLabel, this)
+					.off('add', this._onMarkerAdd, this);
 			}
 
 			this._hasLabelHandlers = false;
@@ -298,13 +331,19 @@ L.Marker.include({
 	},
 
 	updateLabelContent: function (content) {
-		if (this._label) {
-			this._label.setContent(content);
+		if (this.label) {
+			this.label.setContent(content);
 		}
 	},
 
 	getLabel: function () {
-		return this._label;
+		return this.label;
+	},
+
+	_onMarkerAdd: function () {
+		if (this._labelNoHide) {
+			this.showLabel();
+		}
 	},
 
 	_addLabelRevealHandlers: function () {
@@ -328,9 +367,23 @@ L.Marker.include({
 	},
 
 	_moveLabel: function (e) {
-		this._label.setLatLng(e.latlng);
-	},
+		this.label.setLatLng(e.latlng);
+	}
+};
 
+// Add in an option to icon that is used to set where the label anchor is
+L.Icon.Default.mergeOptions({
+	labelAnchor: new L.Point(9, -20)
+});
+
+// Have to do this since Leaflet is loaded before this plugin and initializes
+// L.Marker.options.icon therefore missing our mixin above.
+L.Marker.mergeOptions({
+	icon: new L.Icon.Default()
+});
+
+L.Marker.include(L.BaseMarkerMethods);
+L.Marker.include({
 	_originalUpdateZIndex: L.Marker.prototype._updateZIndex,
 
 	_updateZIndex: function (offset) {
@@ -338,8 +391,8 @@ L.Marker.include({
 
 		this._originalUpdateZIndex(offset);
 
-		if (this._label) {
-			this._label.updateZIndex(zIndex);
+		if (this.label) {
+			this.label.updateZIndex(zIndex);
 		}
 	},
 
@@ -358,19 +411,21 @@ L.Marker.include({
 
 		this._originalUpdateOpacity();
 
-		if (this._label) {
-			this._label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
+		if (this.label) {
+			this.label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
 		}
 	}
 });
 
+L.CircleMarker.include(L.BaseMarkerMethods);
+
 L.Path.include({
 	bindLabel: function (content, options) {
-		if (!this._label || this._label.options !== options) {
-			this._label = new L.Label(options, this);
+		if (!this.label || this.label.options !== options) {
+			this.label = new L.Label(options, this);
 		}
 
-		this._label.setContent(content);
+		this.label.setContent(content);
 
 		if (!this._showLabelAdded) {
 			this
@@ -388,9 +443,9 @@ L.Path.include({
 	},
 
 	unbindLabel: function () {
-		if (this._label) {
+		if (this.label) {
 			this._hideLabel();
-			this._label = null;
+			this.label = null;
 			this._showLabelAdded = false;
 			this
 				.off('mouseover', this._showLabel, this)
@@ -401,29 +456,27 @@ L.Path.include({
 	},
 
 	updateLabelContent: function (content) {
-		if (this._label) {
-			this._label.setContent(content);
+		if (this.label) {
+			this.label.setContent(content);
 		}
 	},
 
 	_showLabel: function (e) {
-		this._label.setLatLng(e.latlng);
-		this._map.showLabel(this._label);
+		this.label.setLatLng(e.latlng);
+		this._map.showLabel(this.label);
 	},
 
 	_moveLabel: function (e) {
-		this._label.setLatLng(e.latlng);
+		this.label.setLatLng(e.latlng);
 	},
 
 	_hideLabel: function () {
-		this._label.close();
+		this.label.close();
 	}
 });
 
 L.Map.include({
 	showLabel: function (label) {
-		this._label = label;
-
 		return this.addLayer(label);
 	}
 });

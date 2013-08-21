@@ -1,15 +1,23 @@
-L.Label = L.Popup.extend({
+L.Label = L.Class.extend({
 
 	includes: L.Mixin.Events,
 
 	options: {
-		autoPan: false,
 		className: '',
 		clickable: false,
-		closePopupOnClick: false,
+		direction: 'right',
 		noHide: false,
 		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
-		opacity: 1
+		opacity: 1,
+		zoomAnimation: true
+	},
+
+	initialize: function (options, source) {
+		L.setOptions(this, options);
+
+		this._source = source;
+		this._animated = L.Browser.any3d && this.options.zoomAnimation;
+		this._isOpen = false;
 	},
 
 	onAdd: function (map) {
@@ -24,7 +32,7 @@ L.Label = L.Popup.extend({
 
 		this._pane.appendChild(this._container);
 
-		map.on('viewreset', this._updatePosition, this);
+		map.on('moveend', this._onMoveEnd, this);
 
 		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
@@ -45,13 +53,25 @@ L.Label = L.Popup.extend({
 		this._pane.removeChild(this._container);
 
 		map.off({
-			viewreset: this._updatePosition,
-			zoomanim: this._zoomAnimation
+			zoomanim: this._zoomAnimation,
+			moveend: this._onMoveEnd
 		}, this);
 
 		this._removeInteraction();
 
 		this._map = null;
+	},
+
+	setLatLng: function (latlng) {
+		this._latlng = L.latLng(latlng);
+		this._update();
+		return this;
+	},
+
+	setContent: function (content) {
+		this._content = content;
+		this._update();
+		return this;
 	},
 
 	close: function () {
@@ -87,16 +107,25 @@ L.Label = L.Popup.extend({
 		this.updateZIndex(this._zIndex);
 	},
 
+	_update: function () {
+		if (!this._map) { return; }
+
+		this._container.style.visibility = 'hidden';
+
+		this._updateContent();
+		this._updatePosition();
+
+		this._container.style.visibility = '';
+	},
+
 	_updateContent: function () {
 		if (!this._content) { return; }
 
 		if (typeof this._content === 'string') {
 			this._container.innerHTML = this._content;
-		}
-	},
 
-	_updateLayout: function () {
-		// Do nothing
+			this._labelWidth = this._container.offsetWidth;
+		}
 	},
 
 	_updatePosition: function () {
@@ -106,15 +135,39 @@ L.Label = L.Popup.extend({
 	},
 
 	_setPosition: function (pos) {
-		pos = pos.add(this.options.offset);
+		var map = this._map,
+			container = this._container,
+			centerPoint = map.latLngToContainerPoint(map.getCenter()),
+			labelPoint = map.layerPointToContainerPoint(pos),
+			direction = this.options.direction,
+			labelWidth = this._labelWidth;
 
-		L.DomUtil.setPosition(this._container, pos);
+		// position to the right (right or auto & needs to)
+		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
+			L.DomUtil.addClass(container, 'leaflet-label-right');
+			L.DomUtil.removeClass(container, 'leaflet-label-left');
+
+			pos = pos.add(this.options.offset);
+		} else { // position to the left
+			L.DomUtil.addClass(container, 'leaflet-label-left');
+			L.DomUtil.removeClass(container, 'leaflet-label-right');
+
+			pos = pos.add(L.point(-this.options.offset.x - labelWidth, this.options.offset.y));
+		}
+
+		L.DomUtil.setPosition(container, pos);
 	},
 
 	_zoomAnimation: function (opt) {
 		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center);
 
 		this._setPosition(pos);
+	},
+
+	_onMoveEnd: function () {
+		if (!this._animated || this.options.direction === 'auto') {
+			this._updatePosition();
+		}
 	},
 
 	_initInteraction: function () {

@@ -10,7 +10,9 @@
 	<script src="../libs/leaflet/leaflet-src.js"></script>
 
 	<script src="../src/Label.js"></script>
+	<script src="../src/BaseMarkerMethods.js"></script>
 	<script src="../src/Marker.Label.js"></script>
+	<script src="../src/CircleMarker.Label.js"></script>
 	<script src="../src/Path.Label.js"></script>
 	<script src="../src/Map.Label.js"></script>
 	<script src="../src/FeatureGroup.Label.js"></script>
@@ -23,11 +25,12 @@
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
 			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
+		var circle = L.circleMarker([-37.7612, 175.2856], { fillColor: "#f00", radius: 8 } ).bindLabel("Hello World", { direction: 'left' }).addTo(map);
+
 		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 
 		var m = L.marker([-37.785, 175.263], {draggable:true}).bindLabel('A sweet static label!', { noHide: true })
-			.addTo(map)
-			.showLabel();
+			.addTo(map);
 
 		// Move marker to confirm that label moves when marker moves (first click)
 		// Remove marker on click so we can check that the label is also removed (second click)
@@ -47,7 +50,7 @@
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750]
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.').addTo(map);
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.', { direction: 'auto' }).addTo(map);
 
 		// Remove polyline on click so we can check that the label is also removed
 		p.on('click', function () { map.removeLayer(p); });
