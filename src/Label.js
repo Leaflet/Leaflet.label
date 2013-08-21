@@ -32,9 +32,9 @@ L.Label = L.Class.extend({
 
 		this._pane.appendChild(this._container);
 
-        map.on('moveend', this._onMoveEnd, this);
-        
-        map.on('viewreset', this._onViewReset, this);
+		map.on('moveend', this._onMoveEnd, this);
+		
+		map.on('viewreset', this._onViewReset, this);
 
 		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
@@ -57,7 +57,7 @@ L.Label = L.Class.extend({
 		map.off({
 			zoomanim: this._zoomAnimation,
 			moveend: this._onMoveEnd,
-            viewreset: this._onViewReset
+			viewreset: this._onViewReset
 		}, this);
 
 		this._removeInteraction();
@@ -167,18 +167,18 @@ L.Label = L.Class.extend({
 		this._setPosition(pos);
 	},
 
-    _onMoveEnd: function () {
-        if (!this._animated || this.options.direction === 'auto') {
-            this._updatePosition();
-        }
-    },
+	_onMoveEnd: function () {
+		if (!this._animated || this.options.direction === 'auto') {
+			this._updatePosition();
+		}
+	},
 
-    _onViewReset: function (e) {
-        /* if map resets hard, we must update the label */
-        if (e && e.hard) {
-            this._update();
-        }
-    },
+	_onViewReset: function (e) {
+		/* if map resets hard, we must update the label */
+		if (e && e.hard) {
+			this._update();
+		}
+	},
 
 	_initInteraction: function () {
 		if (!this.options.clickable) { return; }
