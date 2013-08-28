@@ -67,7 +67,9 @@ L.Label = L.Class.extend({
 
 	setLatLng: function (latlng) {
 		this._latlng = L.latLng(latlng);
-		this._update();
+		if (this._map) {
+			this._updatePosition();
+		}
 		return this;
 	},
 
