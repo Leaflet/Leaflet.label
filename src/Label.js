@@ -7,7 +7,7 @@ L.Label = L.Class.extend({
 		clickable: false,
 		direction: 'right',
 		noHide: false,
-		offset: new L.Point(12, -15), // 6 (width of the label triangle) + 6 (padding)
+		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
 		zoomAnimation: true
 	},
@@ -144,18 +144,19 @@ L.Label = L.Class.extend({
 			labelPoint = map.layerPointToContainerPoint(pos),
 			direction = this.options.direction,
 			labelWidth = this._labelWidth;
+			offset = L.point(this.options.offset)
 
 		// position to the right (right or auto & needs to)
 		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
 			L.DomUtil.addClass(container, 'leaflet-label-right');
 			L.DomUtil.removeClass(container, 'leaflet-label-left');
 
-			pos = pos.add(this.options.offset);
+			pos = pos.add(offset);
 		} else { // position to the left
 			L.DomUtil.addClass(container, 'leaflet-label-left');
 			L.DomUtil.removeClass(container, 'leaflet-label-right');
 
-			pos = pos.add(L.point(-this.options.offset.x - labelWidth, this.options.offset.y));
+			pos = pos.add(L.point(-offset.x - labelWidth, offset.y));
 		}
 
 		L.DomUtil.setPosition(container, pos);
