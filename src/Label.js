@@ -145,8 +145,8 @@ L.Label = L.Class.extend({
 			centerPoint = map.latLngToContainerPoint(map.getCenter()),
 			labelPoint = map.layerPointToContainerPoint(pos),
 			direction = this.options.direction,
-			labelWidth = this._labelWidth;
-			offset = L.point(this.options.offset)
+			labelWidth = this._labelWidth,
+			offset = L.point(this.options.offset);
 
 		// position to the right (right or auto & needs to)
 		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
