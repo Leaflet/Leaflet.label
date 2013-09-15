@@ -11,6 +11,7 @@ An in-progress version being developed on the master branch.
 
  * Removed need to call `showLabel` when adding a static label to the map.
  * Added support for changing the direction of the label in relation to the marker. Added auto mode that switches depending on which side of the screen you are on. (adapted from [@erictheise](https://github.com/erictheise) pull request) [#17](https://github.com/Leaflet/Leaflet.label/pull/17)
+ * Added `labelAnchor` option to `L.CircleMarker`.
 
 ### Bug fixes
 
