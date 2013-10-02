@@ -40,8 +40,7 @@
 	left: -10px;
 }
 
-.leaflet-label:after,
-.ie_after {
+.leaflet-label:after {
 	border-left: 6px solid black;
 	border-left-color: inherit;
 	right: -10px;
