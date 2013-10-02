@@ -41,5 +41,15 @@ L.Marker.include({
 		if (this.label) {
 			this.label.setOpacity(this.options.labelHasSemiTransparency ? this.options.opacity : absoluteOpacity);
 		}
+	},
+
+	_originalSetLatLng: L.Marker.prototype.setLatLng,
+
+	setLatLng: function (latlng) {
+		if (this.label && !this._labelNoHide) {
+			this.hideLabel();
+		}
+
+		return this._originalSetLatLng(latlng);
 	}
 });
