@@ -16,6 +16,7 @@ An in-progress version being developed on the master branch.
 ### Bug fixes
 
  * Fix bug where map view hard reset did not update labels. (by [@dagjomar](https://github.com/dagjomar)). [#43](https://github.com/Leaflet/Leaflet.label/pull/43)
+ * Fix issue where non static labels would remain visible if the latlng of the marker changed.
 
 ## 0.1.4 (August 20, 2013)
 
