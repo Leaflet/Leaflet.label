@@ -5,6 +5,10 @@ Leaflet.draw Changelog
 
 An in-progress version being developed on the master branch.
 
+### Plugin improvements
+
+ * Improved performance when setting label content.
+
 ### Bug fixes
 
  * Fixed issue where labels could appear blurry after zoom. 
