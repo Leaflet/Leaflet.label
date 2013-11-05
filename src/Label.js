@@ -127,10 +127,14 @@ L.Label = L.Class.extend({
 	},
 
 	_updateContent: function () {
-		if (!this._content || !this._map) { return; }
+		if (!this._content || !this._map || this._prevContent === this._content) {
+			return;
+		}
 
 		if (typeof this._content === 'string') {
 			this._container.innerHTML = this._content;
+
+			this._prevContent = this._content;
 
 			this._labelWidth = this._container.offsetWidth;
 		}
