@@ -163,15 +163,16 @@ L.Label = L.Class.extend({
 			labelPoint = map.layerPointToContainerPoint(pos),
 			direction = this._getDirection(),
 			labelWidth = this._labelWidth,
-			offset = L.point(this.options.offset);
+			offset = L.point(this.options.offset),
+			varticalOffset;
 
 		if (direction === 'top') {
-			var verticalOffset = offset.y;
-			verticalOffset -= this._isOnMarker ? this._getIconHeight() : 0;
+			verticalOffset = offset.y;
+			verticalOffset -= this._isOnMarker() ? this._getIconHeight() : 0;
 
 			pos = pos.add(L.point(-labelWidth / 2, verticalOffset));
 		} else if (direction === 'bottom') {
-			var verticalOffset = offset.y;
+			verticalOffset = offset.y;
 			verticalOffset += this._isOnMarker ? this._getIconHeight() : 0;
 
 			pos = pos.add(L.point(-labelWidth / 2, verticalOffset));
