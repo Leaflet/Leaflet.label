@@ -5,6 +5,8 @@ Leaflet.draw Changelog
 
 An in-progress version being developed on the master branch.
 
+## 0.2.1 (December 13, 2013)
+
 ### Plugin improvements
 
  * Improved performance when setting label content.
