@@ -156,14 +156,14 @@ L.Label = L.Class.extend({
 			offset = L.point(this.options.offset);
 
 		// Left, Center, Right positioning. 'Auto' chooses left or right as
-        // necessary to fit the label on the map.
-        if (direction === 'center') {
+		// necessary to fit the label on the map.
+		if (direction === 'center') {
 			L.DomUtil.addClass(container, 'leaflet-label-center');
 			L.DomUtil.removeClass(container, 'leaflet-label-left');
 			L.DomUtil.removeClass(container, 'leaflet-label-right');
 
 			pos = pos.add(L.point(-offset.x - (labelWidth / 2), offset.y));
-        } else if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
+		} else if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
 			L.DomUtil.addClass(container, 'leaflet-label-right');
 			L.DomUtil.removeClass(container, 'leaflet-label-left');
 			L.DomUtil.removeClass(container, 'leaflet-label-center');
