@@ -5,6 +5,10 @@ Leaflet.draw Changelog
 
 An in-progress version being developed on the master branch.
 
+### Plugin improvements
+
+* Disable pointer-events for the label to fix flashing label issue. (by [@iandees](https://github.com/iandees)) [#70](https://github.com/Leaflet/Leaflet.label/pull/70)
+
 ## 0.2.1 (December 13, 2013)
 
 ### Plugin improvements
