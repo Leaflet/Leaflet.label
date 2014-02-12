@@ -24,6 +24,7 @@
 
 .leaflet-label.leaflet-clickable {
 	cursor: pointer;
+	pointer-events: auto;
 }
 
 .leaflet-label:before,
