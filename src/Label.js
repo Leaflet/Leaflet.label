@@ -1,4 +1,4 @@
-L.Label = L.Class.extend({
+L.Label = L.Layer.extend({
 
 	includes: L.Mixin.Events,
 
