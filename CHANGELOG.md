@@ -9,6 +9,10 @@ An in-progress version being developed on the master branch.
 
 * Disable pointer-events for the label to fix flashing label issue. (by [@iandees](https://github.com/iandees)) [#70](https://github.com/Leaflet/Leaflet.label/pull/70)
 
+### Bug fixes
+
+* Handle when L.noConflict() is used.
+
 ## 0.2.1 (December 13, 2013)
 
 ### Plugin improvements
