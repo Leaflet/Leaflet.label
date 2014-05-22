@@ -111,8 +111,17 @@ L.Label = L.Class.extend({
 	},
 
 	_initLayout: function () {
-		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		var prefix = 'leaflet-label';
+
+		this._container = L.DomUtil.create('div', prefix + ' ' + this.options.className + ' leaflet-zoom-animated');
 		this.updateZIndex(this._zIndex);
+
+		// L.PopUp based _initLayout()
+		var wrapper = L.DomUtil.create('div', prefix + '-content-wrapper', this._container);
+		L.DomEvent.disableClickPropagation(wrapper);
+		this._contentNode = L.DomUtil.create('div', prefix + '-content', wrapper);
+		L.DomEvent.disableScrollPropagation(this._contentNode);
+		L.DomEvent.on(wrapper, 'contextmenu', L.DomEvent.stopPropagation);
 	},
 
 	_update: function () {
@@ -137,6 +146,12 @@ L.Label = L.Class.extend({
 			this._prevContent = this._content;
 
 			this._labelWidth = this._container.offsetWidth;
+		} else {
+			// accept HTMLElement, based on L.PopUp
+			while (this._contentNode.hasChildNodes()) {
+				this._contentNode.removeChild(this._contentNode.firstChild);
+			}
+			this._contentNode.appendChild(this._content);
 		}
 	},
 
