@@ -40,6 +40,7 @@ When you call ````bindLabel()```` you can pass in an options object. These optio
  - **noHide**: doesn't attach event handler for showing/hiding the label on mouseover/out.
  - **className**: the css class to add to the label element
  - **direction**: one of `left`|`right`(default)|`auto`. The direction the label displays in relation to the marker. `auto` will choose the optimal direction depending on the position of the marker.
+ - **pane**: which [map pane](http://leafletjs.com/reference.html#map-panes) to put the label into. By default, the `markerPane` will be used for markers, and the `popupPane` for other objects.
 
 E.g. To create a static label that automatically positions the label
 
