@@ -47,6 +47,7 @@ L.Label = L.Class.extend({
 
 		if (L.Browser.touch && !this.options.noHide) {
 			L.DomEvent.on(this._container, 'click', this.close, this);
+			map.on('click', this.close, this);
 		}
 	},
 
@@ -88,6 +89,7 @@ L.Label = L.Class.extend({
 		if (map) {
 			if (L.Browser.touch && !this.options.noHide) {
 				L.DomEvent.off(this._container, 'click', this.close);
+				map.off('click', this.close, this);
 			}
 
 			map.removeLayer(this);
