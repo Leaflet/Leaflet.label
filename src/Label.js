@@ -23,7 +23,8 @@ L.Label = L.Class.extend({
 	onAdd: function (map) {
 		this._map = map;
 
-		this._pane = this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
+		this._pane = this.options.pane ? map._panes[this.options.pane] :
+			this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
 
 		if (!this._container) {
 			this._initLayout();
