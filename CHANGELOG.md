@@ -8,6 +8,8 @@ An in-progress version being developed on the master branch.
 ### Plugin improvements
 
 * Disable pointer-events for the label to fix flashing label issue. (by [@iandees](https://github.com/iandees)) [#70](https://github.com/Leaflet/Leaflet.label/pull/70)
+* Close open labels (except when in noHide mode) on touch devices when tap map.
+* Add an option to allow configuration of the Leaflet `pane` to insert the label element into. (by [@perliedman](https://github.com/perliedman)) [#81](https://github.com/Leaflet/Leaflet.label/pull/81)
 
 ### Bug fixes
 
