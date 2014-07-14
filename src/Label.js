@@ -9,7 +9,8 @@ L.Label = L.Layer.extend({
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
-		zoomAnimation: true
+		zoomAnimation: true,
+		pane: "popupPane"
 	},
 
 	initialize: function (options, source) {
@@ -23,7 +24,7 @@ L.Label = L.Layer.extend({
 	onAdd: function (map) {
 		this._map = map;
 
-		if (this.options.pane !== undefined) {
+		if (this.options.pane !== "popupPane") {
 			this._pane = map.getPane(this.options.pane);
 		} else {
 			this._pane = this._source instanceof L.Marker ? this._source.getPane() : map.getPane("popupPane");
