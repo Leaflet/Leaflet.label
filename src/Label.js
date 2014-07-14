@@ -23,7 +23,11 @@ L.Label = L.Layer.extend({
 	onAdd: function (map) {
 		this._map = map;
 
-		this._pane = this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
+		if (this.options.pane !== undefined) {
+			this._pane = map.getPane(this.options.pane);
+		} else {
+			this._pane = this._source instanceof L.Marker ? map.getPane("markerPane") : map.getPane("popupPane");
+		}
 
 		if (!this._container) {
 			this._initLayout();
