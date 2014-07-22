@@ -542,4 +542,4 @@ L.FeatureGroup.include({
 	}
 });
 
-}(this, document));
+}(window, document));
