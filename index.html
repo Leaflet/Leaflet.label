@@ -15,9 +15,9 @@
 	
 	<script>
 		
-		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
-			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
-			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
+		var osmUrl = ' http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			osmTiles = new L.TileLayer(osmUrl, {maxZoom: 18}),
+			map = new L.Map('map', {layers: [osmTiles], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
 		L.marker([-37.7772, 175.2606]).bindLabel('Look revealing label!').addTo(map);
 
