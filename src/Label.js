@@ -23,7 +23,8 @@ L.Label = L.Layer.extend({
 	onAdd: function (map) {
 		this._map = map;
 
-		this._pane = this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
+		this._pane = this.options.pane ? map._panes[this.options.pane] :
+			this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
 
 		if (!this._container) {
 			this._initLayout();
@@ -47,6 +48,7 @@ L.Label = L.Layer.extend({
 
 		if (L.Browser.touch && !this.options.noHide) {
 			L.DomEvent.on(this._container, 'click', this.close, this);
+			map.on('click', this.close, this);
 		}
 	},
 
@@ -88,6 +90,7 @@ L.Label = L.Layer.extend({
 		if (map) {
 			if (L.Browser.touch && !this.options.noHide) {
 				L.DomEvent.off(this._container, 'click', this.close);
+				map.off('click', this.close, this);
 			}
 
 			map.removeLayer(this);

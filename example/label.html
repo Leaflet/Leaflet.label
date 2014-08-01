@@ -21,9 +21,10 @@
 	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
 	<script>
 		
-		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
-			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18}),
-			map = new L.Map('map', {layers: [cloudmade], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
+		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+			osm = new L.TileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
+			map = new L.Map('map', {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
 		var circle = L.circleMarker([-37.7612, 175.2856], { fillColor: "#f00", radius: 8 } ).bindLabel("Hello World", { direction: 'left' }).addTo(map);
 

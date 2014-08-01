@@ -22,7 +22,7 @@ L.polyline([
 	[-37.7612, 175.2756],
 	[-37.7702, 175.2796],
 	[-37.7802, 175.2750],
-]).bindLabel('Even polylines can have labels.').addTo(map)	
+]).bindLabel('Even polylines can have labels.').addTo(map)
 ````
 
 If you would prefer the label to be always visible set the ````noHide: true```` option and call ````showLabel()```` once added to the map:
@@ -37,9 +37,14 @@ L.marker([-37.785, 175.263])
 
 When you call ````bindLabel()```` you can pass in an options object. These options are:
 
- - **noHide**: doesn't attach event handler for showing/hiding the label on mouseover/out.
- - **className**: the css class to add to the label element
- - **direction**: one of `left`|`right`(default)|`auto`. The direction the label displays in relation to the marker. `auto` will choose the optimal direction depending on the position of the marker.
+ - **clickable**: Whether or not the label is clickable. Default: `false`
+ - **noHide**: Doesn't attach event handler for showing/hiding the label on mouseover/out. Default: `false`
+ - **className**: The css class to add to the label element. Default `""`
+ - **direction**: One of `left`|`right`|`auto`. The direction the label displays in relation to the marker. `auto` will choose the optimal direction depending on the position of the marker. Default `right`
+ - **pane**: Which [map pane](http://leafletjs.com/reference.html#map-panes) to put the label into. By default, the `markerPane` will be used for markers, and the `popupPane` for other objects.
+ - **offset**: Position offset from the marker icon's `labelAnchor`. Default: `[12,-15]`
+ - **opacity**: Opacity of the label. Default: `1`
+ - **zoomAnimation**: Whether or Leaflet should use zoom animation on the label. Default: `true`
 
 E.g. To create a static label that automatically positions the label
 
@@ -80,7 +85,7 @@ When positioning the label L.Label includes a 6px horizontal padding. you will n
 
 ##Setting the opacity of a label
 
-You can set the opacity of a label by calling the `setOpacity` method on `L.Marker`. By default the opacity will either be **0** or **1**. 
+You can set the opacity of a label by calling the `setOpacity` method on `L.Marker`. By default the opacity will either be **0** or **1**.
 
 ````js
 // Sets opacity of marker to 0.3 and opacity of label to 1
