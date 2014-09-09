@@ -51,8 +51,9 @@
 			[-37.7612, 175.2756],
 			[-37.7702, 175.2796],
 			[-37.7802, 175.2750]
-		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have labels.', { direction: 'auto' }).addTo(map);
+		],{ weight: 12, color: '#fe57a1' }).bindLabel('Even polylines can have static labels.', { direction: 'auto', noHide: true }).addTo(map);
 
+		p.showLabel();
 		// Remove polyline on click so we can check that the label is also removed
 		p.on('click', function () { map.removeLayer(p); });
 
