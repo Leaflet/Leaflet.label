@@ -13,7 +13,7 @@ var L = window.L;/*
 
 L.labelVersion = '0.2.2-dev';
 
-L.Label = L.Class.extend({
+L.Label = (L.Layer ? L.Layer : L.Class).extend({
 
 	includes: L.Mixin.Events,
 
