@@ -6,8 +6,16 @@
 	http://leafletjs.com
 	https://github.com/jacobtoye
 */
-(function (window, document, undefined) {
-var L = window.L;/*
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['leaflet'], factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory(require('leaflet'));
+    } else {
+        factory(L);
+    }
+}(function (L) {
+/*
  * Leaflet.label assumes that you have already included the Leaflet library.
  */
 
@@ -542,4 +550,4 @@ L.FeatureGroup.include({
 	}
 });
 
-}(window, document));
+}));

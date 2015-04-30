@@ -115,8 +115,17 @@ exports.build = function (compsBase32, buildName) {
 	console.log('Concatenating ' + files.length + ' files...');
 
 	var copy = fs.readFileSync('src/copyright.js', 'utf8'),
-	    intro = '(function (window, document, undefined) {\nvar L = window.L;',
-	    outro = '}(window, document));',
+        intro = 
+          ["(function (factory) {",
+           "    if (typeof define === 'function' && define.amd) {",
+           "        define(['leaflet'], factory);",
+           "    } else if (typeof exports === 'object') {",
+           "        module.exports = factory(require('leaflet'));",
+           "    } else {",
+           "        factory(L);",
+           "    }",
+           "}(function (L) {\n"].join("\n"),
+        outro = "}));",
 	    newSrc = copy + intro + combineFiles(files) + outro,
 
 	    pathPart = 'dist/leaflet.label' + (buildName ? '-' + buildName : ''),
