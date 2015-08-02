@@ -32,6 +32,10 @@ L.BaseMarkerMethods = {
 		}
 	},
 
+	isLabelNoHide: function () {
+		return this._labelNoHide;
+	},
+
 	bindLabel: function (content, options) {
 		var labelAnchor = this.options.icon ? this.options.icon.options.labelAnchor : this.options.labelAnchor,
 			anchor = L.point(labelAnchor) || L.point(0, 0);
