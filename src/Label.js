@@ -7,7 +7,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		clickable: false,
 		direction: 'right',
 		noHide: false,
-		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
+		offset: [0, 0],
 		opacity: 1,
 		zoomAnimation: true,
 		pane: null
