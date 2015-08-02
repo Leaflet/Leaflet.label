@@ -17,11 +17,11 @@ L.BaseMarkerMethods = {
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this._labelNoHide === noHide) {
+		if (this.label.options.noHide === noHide) {
 			return;
 		}
 
-		this._labelNoHide = noHide;
+		this.label.options.noHide = noHide;
 
 		if (noHide) {
 			this._removeLabelRevealHandlers();
@@ -33,7 +33,7 @@ L.BaseMarkerMethods = {
 	},
 
 	isLabelNoHide: function () {
-		return this._labelNoHide;
+		return this.label.options.noHide;
 	},
 
 	bindLabel: function (content, options) {
@@ -48,23 +48,24 @@ L.BaseMarkerMethods = {
 
 		options = L.Util.extend({offset: anchor}, options);
 
-		this._labelNoHide = options.noHide;
+		if (!this.label || this.label.options !== options) {
+			if (this.label) {
+				this._hideLabel();
+			}
+			this.label = new L.Label(options, this);
+		}
+		this.label.setContent(content);
 
-		if (!this.label) {
-			if (!this._labelNoHide) {
+		if (!this._hasLabelHandlers) {
+			if (!this.label.options.noHide) {
 				this._addLabelRevealHandlers();
 			}
-
 			this
 				.on('remove', this.hideLabel, this)
 				.on('move', this._moveLabel, this)
 				.on('add', this._onMarkerAdd, this);
-
 			this._hasLabelHandlers = true;
 		}
-
-		this.label = new L.Label(options, this)
-			.setContent(content);
 
 		return this;
 	},
@@ -73,10 +74,8 @@ L.BaseMarkerMethods = {
 		if (this.label) {
 			this.hideLabel();
 
-			this.label = null;
-
 			if (this._hasLabelHandlers) {
-				if (!this._labelNoHide) {
+				if (!this.label.options.noHide) {
 					this._removeLabelRevealHandlers();
 				}
 
@@ -87,6 +86,7 @@ L.BaseMarkerMethods = {
 			}
 
 			this._hasLabelHandlers = false;
+			this.label = null;
 		}
 		return this;
 	},
@@ -102,7 +102,7 @@ L.BaseMarkerMethods = {
 	},
 
 	_onMarkerAdd: function () {
-		if (this._labelNoHide) {
+		if (this.label.options.noHide) {
 			this.showLabel();
 		}
 	},

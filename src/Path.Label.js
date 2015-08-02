@@ -23,11 +23,11 @@ L.Path.include({
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this._labelNoHide === noHide) {
+		if (this.label.options.noHide === noHide) {
 			return;
 		}
 
-		this._labelNoHide = noHide;
+		this.label.options.noHide = noHide;
 
 		if (noHide) {
 			this._removeLabelRevealHandlers();
@@ -39,25 +39,27 @@ L.Path.include({
 	},
 
 	isLabelNoHide: function () {
-		return this._labelNoHide;
+		return this.label.options.noHide;
 	},
 
 	bindLabel: function (content, options) {
 		if (!this.label || this.label.options !== options) {
+			if (this.label) {
+				this._hideLabel();
+			}
 			this.label = new L.Label(options, this);
 		}
 
 		this.label.setContent(content);
-		this._labelNoHide = options && options.noHide;
 
-		if (!this._showLabelAdded) {
-			if (this._labelNoHide) {
+		if (!this._hasLabelHandlers) {
+			if (this.label.options.noHide) {
 				this.on('add', this._onPathAdd, this);
 			} else {
 				this._addLabelRevealHandlers();
 			}
 			this.on('remove', this._hideLabel, this);
-			this._showLabelAdded = true;
+			this._hasLabelHandlers = true;
 		}
 
 		return this;
@@ -66,14 +68,17 @@ L.Path.include({
 	unbindLabel: function () {
 		if (this.label) {
 			this._hideLabel();
-			this.label = null;
-			this._showLabelAdded = false;
-			if (this._labelNoHide) {
-				this.off('add', this._onPathAdd, this);
-			} else {
-				this._removeLabelRevealHandlers();
+			if (this._hasLabelHandlers) {
+				if (this.label.options.noHide) {
+					this.off('add', this._onPathAdd, this);
+				} else {
+					this._removeLabelRevealHandlers();
+				}
+				this.off('remove', this._hideLabel, this);
 			}
-			this.off('remove', this._hideLabel, this);
+
+			this._hasLabelHandlers = false;
+			this.label = null;
 		}
 		return this;
 	},
@@ -89,7 +94,7 @@ L.Path.include({
 	},
 
 	_onPathAdd: function () {
-		if (this._labelNoHide) {
+		if (this.label.options.noHide) {
 			this.showLabel();
 		}
 	},
