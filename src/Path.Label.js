@@ -1,6 +1,8 @@
 L.Path.include({
 	showLabel: function (latlng) {
 		if (this.label && this._map) {
+			this.label._setLabelNoHide(true);
+			this._removeLabelRevealHandlers();
 			if (!latlng) {
 				if (typeof this.getCenter === "function") {
 					latlng = this.getCenter();
@@ -19,21 +21,16 @@ L.Path.include({
 		if (this.label) {
 			this.label.close();
 		}
+		if (this.label._setLabelNoHide(false)) {
+			this._addLabelRevealHandlers();
+		}
 		return this;
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this.label.options.noHide === noHide) {
-			return;
-		}
-
-		this.label.options.noHide = noHide;
-
 		if (noHide) {
-			this._removeLabelRevealHandlers();
 			this.showLabel();
 		} else {
-			this._addLabelRevealHandlers();
 			this.hideLabel();
 		}
 	},

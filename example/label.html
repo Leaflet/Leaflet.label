@@ -58,7 +58,11 @@
 		var p2 = L.polyline([
 			[-37.7772, 175.2606],
 			[-37.785, 175.263]
-		],{ weight: 6, color: '#fe0000' }).bindLabel('Another label', { direction: 'auto', noHide: true }).addTo(map);
+		],{ weight: 6, color: '#fe0000' }).bindLabel('Another label', {
+			direction: 'auto',
+			clickable: true,
+			passClickToSource: true,
+			noHide: true }).addTo(map);
 		p2.on('click', function () { p2.setLabelNoHide(!p2.isLabelNoHide()); });
 
 		var deathIcon = L.icon({

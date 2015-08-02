@@ -2,8 +2,9 @@
 L.BaseMarkerMethods = {
 	showLabel: function () {
 		if (this.label && this._map) {
-			this.label.setLatLng(this._latlng);
-			this._map.showLabel(this.label);
+			this.label._setLabelNoHide(true);
+			this._removeLabelRevealHandlers();
+			this._showLabel();
 		}
 
 		return this;
@@ -13,21 +14,16 @@ L.BaseMarkerMethods = {
 		if (this.label) {
 			this.label.close();
 		}
+		if (this.label._setLabelNoHide(false)) {
+			this._addLabelRevealHandlers();
+		}
 		return this;
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this.label.options.noHide === noHide) {
-			return;
-		}
-
-		this.label.options.noHide = noHide;
-
 		if (noHide) {
-			this._removeLabelRevealHandlers();
 			this.showLabel();
 		} else {
-			this._addLabelRevealHandlers();
 			this.hideLabel();
 		}
 	},
@@ -103,28 +99,33 @@ L.BaseMarkerMethods = {
 
 	_onMarkerAdd: function () {
 		if (this.label.options.noHide) {
-			this.showLabel();
+			this._showLabel();
 		}
 	},
 
 	_addLabelRevealHandlers: function () {
 		this
-			.on('mouseover', this.showLabel, this)
+			.on('mouseover', this._showLabel, this)
 			.on('mouseout', this.hideLabel, this);
 
 		if (L.Browser.touch) {
-			this.on('click', this.showLabel, this);
+			this.on('click', this._showLabel, this);
 		}
 	},
 
 	_removeLabelRevealHandlers: function () {
 		this
-			.off('mouseover', this.showLabel, this)
+			.off('mouseover', this._showLabel, this)
 			.off('mouseout', this.hideLabel, this);
 
 		if (L.Browser.touch) {
-			this.off('click', this.showLabel, this);
+			this.off('click', this._showLabel, this);
 		}
+	},
+
+	_showLabel: function () {
+		this.label.setLatLng(this._latlng);
+		this._map.showLabel(this.label);
 	},
 
 	_moveLabel: function (e) {
