@@ -4,7 +4,7 @@
 	"description": "Labels for leaflet maps",
 	"devDependencies": {
 		"jshint": "~2.1.4",
-		"uglify-js": "~2.3.6"
+		"uglify-js": "~2.4.23"
 	},
 	"main": "dist/leaflet.label.js",
 	"scripts": {
