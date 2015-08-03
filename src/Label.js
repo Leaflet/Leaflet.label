@@ -40,6 +40,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 
 		map
 			.on('moveend', this._onMoveEnd, this)
+			.on('zoomend', this._onZoomEnd, this)
 			.on('viewreset', this._onViewReset, this);
 
 		if (this._animated) {
@@ -58,6 +59,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		map.off({
 			zoomanim: this._zoomAnimation,
 			moveend: this._onMoveEnd,
+			zoomend: this._onZoomEnd,
 			viewreset: this._onViewReset
 		}, this);
 
@@ -184,6 +186,10 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		if (!this._animated || this.options.direction === 'auto') {
 			this._updatePosition();
 		}
+	},
+
+	_onZoomEnd: function () {
+		this._updatePosition();
 	},
 
 	_onViewReset: function (e) {
