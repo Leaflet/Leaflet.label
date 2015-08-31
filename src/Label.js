@@ -43,6 +43,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 			.on('viewreset', this._update, this);
 
 		if (this._animated) {
+			map.on('zoom', this._update, this);
 			map.on('zoomanim', this._zoomAnimation, this);
 		}
 
@@ -56,6 +57,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		this._pane.removeChild(this._container);
 
 		map.off({
+			zoom: this._update,
 			zoomanim: this._zoomAnimation,
 			moveend: this._onMoveEnd,
 			viewreset: this._update
