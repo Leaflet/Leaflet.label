@@ -40,7 +40,8 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 
 		map
 			.on('moveend', this._onMoveEnd, this)
-			.on('viewreset', this._onViewReset, this);
+			.on('viewreset', this._onViewReset, this)
+			.on('zoomend', this._onZoomEnd,this);
 
 		if (this._animated) {
 			map.on('zoomanim', this._zoomAnimation, this);
@@ -184,6 +185,10 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		if (!this._animated || this.options.direction === 'auto') {
 			this._updatePosition();
 		}
+	},
+	
+	_onZoomEnd: function () {
+			this._updatePosition();
 	},
 
 	_onViewReset: function (e) {
