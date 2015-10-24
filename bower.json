@@ -5,6 +5,7 @@
   "authors": [
     "Jacob Toye <jacob.toye@gmail.com>"
   ],
+  "main":["dist/leaflet.label.js","dist/leaflet.label.css"],
   "description": "Labels for leaflet maps",
   "license": "MIT",
   "ignore": [
