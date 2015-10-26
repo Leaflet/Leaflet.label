@@ -7,6 +7,10 @@ Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet pow
 
 Check out the [demo](http://leaflet.github.com/Leaflet.label/).
 
+## Install
+
+To install the plugin run `npm install leaflet-label` via command line in your project. You must also require this in your project like so: `var leaflet-label = require('leaflet-label');`
+
 ##Usage examples
 
 If you want to just bind a label to marker that will show when the mouse is over it, it's really easy:
