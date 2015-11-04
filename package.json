@@ -6,6 +6,7 @@
 		"jshint": "~2.1.4",
 		"uglify-js": "~2.3.6"
 	},
+	"license": "MIT",
 	"main": "dist/leaflet.label.js",
 	"scripts": {
 		"test": "jake test",
