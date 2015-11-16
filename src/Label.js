@@ -9,7 +9,8 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
-		zoomAnimation: true
+		zoomAnimation: true,
+		pane: null
 	},
 
 	initialize: function (options, source) {
