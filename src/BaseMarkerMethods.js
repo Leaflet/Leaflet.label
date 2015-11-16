@@ -2,8 +2,9 @@
 L.BaseMarkerMethods = {
 	showLabel: function () {
 		if (this.label && this._map) {
-			this.label.setLatLng(this._latlng);
-			this._map.showLabel(this.label);
+			this.label._setLabelNoHide(true);
+			this._removeLabelRevealHandlers();
+			this._showLabel();
 		}
 
 		return this;
@@ -13,23 +14,22 @@ L.BaseMarkerMethods = {
 		if (this.label) {
 			this.label.close();
 		}
+		if (this.label._setLabelNoHide(false)) {
+			this._addLabelRevealHandlers();
+		}
 		return this;
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this._labelNoHide === noHide) {
-			return;
-		}
-
-		this._labelNoHide = noHide;
-
 		if (noHide) {
-			this._removeLabelRevealHandlers();
 			this.showLabel();
 		} else {
-			this._addLabelRevealHandlers();
 			this.hideLabel();
 		}
+	},
+
+	isLabelNoHide: function () {
+		return this.label.options.noHide;
 	},
 
 	bindLabel: function (content, options) {
@@ -44,23 +44,24 @@ L.BaseMarkerMethods = {
 
 		options = L.Util.extend({offset: anchor}, options);
 
-		this._labelNoHide = options.noHide;
+		if (!this.label || this.label.options !== options) {
+			if (this.label) {
+				this._hideLabel();
+			}
+			this.label = new L.Label(options, this);
+		}
+		this.label.setContent(content);
 
-		if (!this.label) {
-			if (!this._labelNoHide) {
+		if (!this._hasLabelHandlers) {
+			if (!this.label.options.noHide) {
 				this._addLabelRevealHandlers();
 			}
-
 			this
 				.on('remove', this.hideLabel, this)
 				.on('move', this._moveLabel, this)
 				.on('add', this._onMarkerAdd, this);
-
 			this._hasLabelHandlers = true;
 		}
-
-		this.label = new L.Label(options, this)
-			.setContent(content);
 
 		return this;
 	},
@@ -69,10 +70,8 @@ L.BaseMarkerMethods = {
 		if (this.label) {
 			this.hideLabel();
 
-			this.label = null;
-
 			if (this._hasLabelHandlers) {
-				if (!this._labelNoHide) {
+				if (!this.label.options.noHide) {
 					this._removeLabelRevealHandlers();
 				}
 
@@ -83,6 +82,7 @@ L.BaseMarkerMethods = {
 			}
 
 			this._hasLabelHandlers = false;
+			this.label = null;
 		}
 		return this;
 	},
@@ -98,29 +98,34 @@ L.BaseMarkerMethods = {
 	},
 
 	_onMarkerAdd: function () {
-		if (this._labelNoHide) {
-			this.showLabel();
+		if (this.label.options.noHide) {
+			this._showLabel();
 		}
 	},
 
 	_addLabelRevealHandlers: function () {
 		this
-			.on('mouseover', this.showLabel, this)
+			.on('mouseover', this._showLabel, this)
 			.on('mouseout', this.hideLabel, this);
 
 		if (L.Browser.touch) {
-			this.on('click', this.showLabel, this);
+			this.on('click', this._showLabel, this);
 		}
 	},
 
 	_removeLabelRevealHandlers: function () {
 		this
-			.off('mouseover', this.showLabel, this)
+			.off('mouseover', this._showLabel, this)
 			.off('mouseout', this.hideLabel, this);
 
 		if (L.Browser.touch) {
-			this.off('click', this.showLabel, this);
+			this.off('click', this._showLabel, this);
 		}
+	},
+
+	_showLabel: function () {
+		this.label.setLatLng(this._latlng);
+		this._map.showLabel(this.label);
 	},
 
 	_moveLabel: function (e) {

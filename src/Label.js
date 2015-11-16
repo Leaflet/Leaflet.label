@@ -5,9 +5,10 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 	options: {
 		className: '',
 		clickable: false,
+		passClickToSource: false,
 		direction: 'right',
 		noHide: false,
-		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
+		offset: [0, 0],
 		opacity: 1,
 		zoomAnimation: true,
 		pane: null
@@ -190,7 +191,9 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 	},
 
 	_initInteraction: function () {
-		if (!this.options.clickable) { return; }
+		if (!this.options.clickable || !this.options.noHide || this._interactionsSet) {
+			return;
+		}
 
 		var container = this._container,
 			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
@@ -201,10 +204,11 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		for (var i = 0; i < events.length; i++) {
 			L.DomEvent.on(container, events[i], this._fireMouseEvent, this);
 		}
+		this._interactionsSet = true;
 	},
 
 	_removeInteraction: function () {
-		if (!this.options.clickable) { return; }
+		if (!this._interactionsSet) { return; }
 
 		var container = this._container,
 			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
@@ -215,9 +219,28 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		for (var i = 0; i < events.length; i++) {
 			L.DomEvent.off(container, events[i], this._fireMouseEvent, this);
 		}
+		this._interactionsSet = false;
+	},
+
+	_setLabelNoHide: function (noHide) {
+		if (this.options.noHide !== noHide) {
+			this.options.noHide = noHide;
+			if (this._container) {
+				this._initInteraction();
+			}
+			return true;
+		}
+		return false;
 	},
 
 	_onMouseClick: function (e) {
+		if (this.options.passClickToSource) {
+			this._source.fire(e.type, {
+				originalEvent: e
+			});
+			return;
+		}
+
 		if (this.hasEventListeners(e.type)) {
 			L.DomEvent.stopPropagation(e);
 		}
