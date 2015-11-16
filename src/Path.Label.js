@@ -1,21 +1,62 @@
 L.Path.include({
+	showLabel: function (latlng) {
+		if (this.label && this._map) {
+			this.label._setLabelNoHide(true);
+			this._removeLabelRevealHandlers();
+			if (!latlng) {
+				if (typeof this.getCenter === "function") {
+					latlng = this.getCenter();
+				} else {
+					return this;
+				}
+			}
+			this.label.setLatLng(latlng);
+			this._map.showLabel(this.label);
+		}
+
+		return this;
+	},
+
+	hideLabel: function () {
+		if (this.label) {
+			this.label.close();
+		}
+		if (this.label._setLabelNoHide(false)) {
+			this._addLabelRevealHandlers();
+		}
+		return this;
+	},
+
+	setLabelNoHide: function (noHide) {
+		if (noHide) {
+			this.showLabel();
+		} else {
+			this.hideLabel();
+		}
+	},
+
+	isLabelNoHide: function () {
+		return this.label.options.noHide;
+	},
+
 	bindLabel: function (content, options) {
 		if (!this.label || this.label.options !== options) {
+			if (this.label) {
+				this._hideLabel();
+			}
 			this.label = new L.Label(options, this);
 		}
 
 		this.label.setContent(content);
 
-		if (!this._showLabelAdded) {
-			this
-				.on('mouseover', this._showLabel, this)
-				.on('mousemove', this._moveLabel, this)
-				.on('mouseout remove', this._hideLabel, this);
-
-			if (L.Browser.touch) {
-				this.on('click', this._showLabel, this);
+		if (!this._hasLabelHandlers) {
+			if (this.label.options.noHide) {
+				this.on('add', this._onPathAdd, this);
+			} else {
+				this._addLabelRevealHandlers();
 			}
-			this._showLabelAdded = true;
+			this.on('remove', this._hideLabel, this);
+			this._hasLabelHandlers = true;
 		}
 
 		return this;
@@ -24,12 +65,17 @@ L.Path.include({
 	unbindLabel: function () {
 		if (this.label) {
 			this._hideLabel();
+			if (this._hasLabelHandlers) {
+				if (this.label.options.noHide) {
+					this.off('add', this._onPathAdd, this);
+				} else {
+					this._removeLabelRevealHandlers();
+				}
+				this.off('remove', this._hideLabel, this);
+			}
+
+			this._hasLabelHandlers = false;
 			this.label = null;
-			this._showLabelAdded = false;
-			this
-				.off('mouseover', this._showLabel, this)
-				.off('mousemove', this._moveLabel, this)
-				.off('mouseout remove', this._hideLabel, this);
 		}
 		return this;
 	},
@@ -37,6 +83,37 @@ L.Path.include({
 	updateLabelContent: function (content) {
 		if (this.label) {
 			this.label.setContent(content);
+		}
+	},
+
+	getLabel: function () {
+		return this.label;
+	},
+
+	_onPathAdd: function () {
+		if (this.label.options.noHide) {
+			this.showLabel();
+		}
+	},
+
+	_addLabelRevealHandlers: function () {
+		this
+			.on('mouseover', this._showLabel, this)
+			.on('mousemove', this._moveLabel, this)
+			.on('mouseout', this._hideLabel, this);
+
+		if (L.Browser.touch) {
+			this.on('click', this._showLabel, this);
+		}
+	},
+
+	_removeLabelRevealHandlers: function () {
+		this
+			.off('mouseover', this._showLabel, this)
+			.off('mousemove', this._moveLabel, this)
+			.off('mouseout', this._hideLabel, this);
+		if (L.Browser.touch) {
+			this.off('click', this._showLabel, this);
 		}
 	},
 

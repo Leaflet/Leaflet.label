@@ -46,7 +46,7 @@ L.Marker.include({
 	_originalSetLatLng: L.Marker.prototype.setLatLng,
 
 	setLatLng: function (latlng) {
-		if (this.label && !this._labelNoHide) {
+		if (this.label && !this.label.options.noHide) {
 			this.hideLabel();
 		}
 

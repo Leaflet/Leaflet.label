@@ -1,4 +1,5 @@
 .leaflet-label {
+	margin-top: -15px; /* -(height/2) */
 	background: rgb(235, 235, 235);
 	background: rgba(235, 235, 235, 0.81);
 	background-clip: padding-box;
@@ -51,4 +52,11 @@
 .leaflet-label-right:before,
 .leaflet-label-left:after {
 	content: "";
+}
+
+.leaflet-label-right {
+	margin-left: 6px; /* width of the triangle */
+}
+.leaflet-label-left {
+	margin-left: -6px; /* -width of the triangle /*
 }
