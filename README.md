@@ -45,6 +45,7 @@ When you call ````bindLabel()```` you can pass in an options object. These optio
  - **offset**: Position offset from the marker icon's `labelAnchor`. Default: `[12,-15]`
  - **opacity**: Opacity of the label. Default: `1`
  - **zoomAnimation**: Whether or Leaflet should use zoom animation on the label. Default: `true`
+ - **lang_direction** : Language direction (`ltr` or `rtl`). Default: `ltr`
 
 E.g. To create a static label that automatically positions the label
 

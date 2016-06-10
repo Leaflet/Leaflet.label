@@ -21,6 +21,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		className: '',
 		clickable: false,
 		direction: 'right',
+		lang_direction: 'ltr',
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
@@ -171,19 +172,29 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 			labelPoint = map.layerPointToContainerPoint(pos),
 			direction = this.options.direction,
 			labelWidth = this._labelWidth,
-			offset = L.point(this.options.offset);
+			offset = L.point(this.options.offset),
+			lang_direction = this.options.lang_direction;
 
 		// position to the right (right or auto & needs to)
 		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
 			L.DomUtil.addClass(container, 'leaflet-label-right');
 			L.DomUtil.removeClass(container, 'leaflet-label-left');
 
-			pos = pos.add(offset);
+			if (lang_direction === 'rtl') {
+				pos = pos.add(L.point(offset.x + labelWidth, offset.y));
+			} else {
+				pos = pos.add(offset);
+			}
 		} else { // position to the left
 			L.DomUtil.addClass(container, 'leaflet-label-left');
 			L.DomUtil.removeClass(container, 'leaflet-label-right');
 
-			pos = pos.add(L.point(-offset.x - labelWidth, offset.y));
+			if (lang_direction === 'rtl') {
+				console.log(labelWidth);
+				pos = pos.add(L.point(-offset.x, offset.y));
+			} else {
+				pos = pos.add(L.point(-offset.x - labelWidth, offset.y));
+			}
 		}
 
 		L.DomUtil.setPosition(container, pos);
