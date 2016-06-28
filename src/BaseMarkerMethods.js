@@ -1,3 +1,5 @@
+/*global LeafletLabel */
+
 // This object is a mixin for L.Marker and L.CircleMarker. We declare it here as both need to include the contents.
 L.BaseMarkerMethods = {
 	showLabel: function () {
@@ -36,7 +38,7 @@ L.BaseMarkerMethods = {
 		var labelAnchor = this.options.icon ? this.options.icon.options.labelAnchor : this.options.labelAnchor,
 			anchor = L.point(labelAnchor) || L.point(0, 0);
 
-		anchor = anchor.add(L.Label.prototype.options.offset);
+		anchor = anchor.add(LeafletLabel.prototype.options.offset);
 
 		if (options && options.offset) {
 			anchor = anchor.add(options.offset);

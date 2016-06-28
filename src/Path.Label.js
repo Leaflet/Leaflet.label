@@ -1,7 +1,9 @@
+/*global LeafletLabel */
+
 L.Path.include({
 	bindLabel: function (content, options) {
 		if (!this.label || this.label.options !== options) {
-			this.label = new L.Label(options, this);
+			this.label = new LeafletLabel(options, this);
 		}
 
 		this.label.setContent(content);
