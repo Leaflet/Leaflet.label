@@ -22,7 +22,7 @@
 		window.LeafletLabel = factory(L);
 	}
 }(function (L) {
-L.labelVersion = '0.2.3';
+L.labelVersion = '0.2.4';
 
 
 var LeafletLabel = L.Class.extend({
