@@ -6,14 +6,26 @@
 	http://leafletjs.com
 	https://github.com/jacobtoye
 */
-(function (window, document, undefined) {
-var L = window.L;/*
- * Leaflet.label assumes that you have already included the Leaflet library.
- */
+(function (factory, window) {
 
-L.labelVersion = '0.2.2-dev';
+	// define an AMD module that relies on 'leaflet'
+	if (typeof define === 'function' && define.amd) {
+		define(['leaflet'], factory);
 
-L.Label = (L.Layer ? L.Layer : L.Class).extend({
+	// define a Common JS module that relies on 'leaflet'
+	} else if (typeof exports === 'object') {
+		module.exports = factory(require('leaflet'));
+	}
+
+	// attach your plugin to the global 'L' variable
+	if (typeof window !== 'undefined' && window.L) {
+		window.LeafletLabel = factory(L);
+	}
+}(function (L) {
+L.labelVersion = '0.2.3';
+
+
+var LeafletLabel = L.Class.extend({
 
 	includes: L.Mixin.Events,
 
@@ -265,6 +277,8 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 });
 
 
+/*global LeafletLabel */
+
 // This object is a mixin for L.Marker and L.CircleMarker. We declare it here as both need to include the contents.
 L.BaseMarkerMethods = {
 	showLabel: function () {
@@ -303,7 +317,7 @@ L.BaseMarkerMethods = {
 		var labelAnchor = this.options.icon ? this.options.icon.options.labelAnchor : this.options.labelAnchor,
 			anchor = L.point(labelAnchor) || L.point(0, 0);
 
-		anchor = anchor.add(L.Label.prototype.options.offset);
+		anchor = anchor.add(LeafletLabel.prototype.options.offset);
 
 		if (options && options.offset) {
 			anchor = anchor.add(options.offset);
@@ -326,7 +340,7 @@ L.BaseMarkerMethods = {
 			this._hasLabelHandlers = true;
 		}
 
-		this.label = new L.Label(options, this)
+		this.label = new LeafletLabel(options, this)
 			.setContent(content);
 
 		return this;
@@ -395,6 +409,7 @@ L.BaseMarkerMethods = {
 	}
 };
 
+
 // Add in an option to icon that is used to set where the label anchor is
 L.Icon.Default.mergeOptions({
 	labelAnchor: new L.Point(9, -20)
@@ -459,10 +474,12 @@ L.CircleMarker.mergeOptions({
 
 L.CircleMarker.include(L.BaseMarkerMethods);
 
+/*global LeafletLabel */
+
 L.Path.include({
 	bindLabel: function (content, options) {
 		if (!this.label || this.label.options !== options) {
-			this.label = new L.Label(options, this);
+			this.label = new LeafletLabel(options, this);
 		}
 
 		this.label.setContent(content);
@@ -515,6 +532,7 @@ L.Path.include({
 	}
 });
 
+
 L.Map.include({
 	showLabel: function (label) {
 		return this.addLayer(label);
@@ -542,4 +560,5 @@ L.FeatureGroup.include({
 	}
 });
 
-}(window, document));
+	return LeafletLabel;
+}, window));

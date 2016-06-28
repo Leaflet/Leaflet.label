@@ -1,12 +1,15 @@
 {
 	"name": "leaflet.label",
-	"version": "0.2.1",
+	"version": "0.2.3",
 	"description": "Labels for leaflet maps",
 	"license": "MIT",
 	"devDependencies": {
 		"jshint": "~2.1.4",
 		"uglify-js": "~2.3.6"
 	},
+	"dependencies": {
+		"leaflet": "^1.0.0"
+ 	},
 	"main": "dist/leaflet.label.js",
 	"scripts": {
 		"test": "jake test",
