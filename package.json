@@ -8,7 +8,7 @@
 		"uglify-js": "~2.3.6"
 	},
 	"dependencies": {
-		"leaflet": "^1.0.0"
+		"leaflet": "^0.7.7"
  	},
 	"main": "dist/leaflet.label.js",
 	"scripts": {
