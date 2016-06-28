@@ -61,7 +61,7 @@ L.BaseMarkerMethods = {
 			this._hasLabelHandlers = true;
 		}
 
-		this.label = new L.Label(options, this)
+		this.label = new LeafletLabel(options, this)
 			.setContent(content);
 
 		return this;
