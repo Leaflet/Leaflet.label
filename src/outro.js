@@ -1,0 +1,2 @@
+	return LeafletLabel;
+}, window));
