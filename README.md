@@ -1,7 +1,7 @@
 Leaflet.label
 =============
 
-**NOTE: lastest Leaflet.label master requires Leaflet 0.7-dev**
+**NOTE: lastest versions removes L.Label and replaces with LeafletLabel. You will need to update anywhere that uses L.Label. THis is so we can add support for module loading.**
 
 Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet powered maps.
 
