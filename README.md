@@ -1,7 +1,22 @@
 Leaflet.label
 =============
 
-**NOTE: lastest versions removes L.Label and replaces with LeafletLabel. You will need to update anywhere that uses L.Label. THis is so we can add support for module loading.**
+
+**NOTE: starting with Leaflet 1.0, `L.Label` is added to Leaflet core as `L.Tooltip` and this plugin is deprecrated.**
+
+### Upgrade path to L.Tooltip
+
+- `bindLabel`, `openLabel` and so should be replaced by `bindTooltip`, `openTooltip`, etc.
+- option `clickable` is now named `interactive`
+- option `noHide` is now named `permanent`
+- default `offset` is now [6, -6]
+- default `direction` is now `auto`
+- default `opacity` is now `0.9`
+- the CSS has been fully refactored
+
+- Bonus: L.Tooltip also works for paths: polygons, polylines, etc.
+- Bonus: new directions are supported: `top`, `bottom`, `center`
+- Bonus: new option `sticky` will make the label follow the mouse instead of being displayed at the feature center
 
 Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet powered maps.
 
