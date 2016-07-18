@@ -9,7 +9,8 @@ var LeafletLabel = L.Class.extend({
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
-		zoomAnimation: true
+		zoomAnimation: true,
+		pane: null
 	},
 
 	initialize: function (options, source) {
@@ -40,9 +41,10 @@ var LeafletLabel = L.Class.extend({
 
 		map
 			.on('moveend', this._onMoveEnd, this)
-			.on('viewreset', this._onViewReset, this);
+			.on('viewreset', this._update, this);
 
 		if (this._animated) {
+			map.on('zoom', this._update, this);
 			map.on('zoomanim', this._zoomAnimation, this);
 		}
 
@@ -56,9 +58,10 @@ var LeafletLabel = L.Class.extend({
 		this._pane.removeChild(this._container);
 
 		map.off({
+			zoom: this._update,
 			zoomanim: this._zoomAnimation,
 			moveend: this._onMoveEnd,
-			viewreset: this._onViewReset
+			viewreset: this._update
 		}, this);
 
 		this._removeInteraction();
@@ -183,13 +186,6 @@ var LeafletLabel = L.Class.extend({
 	_onMoveEnd: function () {
 		if (!this._animated || this.options.direction === 'auto') {
 			this._updatePosition();
-		}
-	},
-
-	_onViewReset: function (e) {
-		/* if map resets hard, we must update the label */
-		if (e && e.hard) {
-			this._update();
 		}
 	},
 
