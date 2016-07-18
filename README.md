@@ -18,6 +18,8 @@ Leaflet.label
 - Bonus: new directions are supported: `top`, `bottom`, `center`
 - Bonus: new option `sticky` will make the label follow the mouse instead of being displayed at the feature center
 
+---------
+
 Leaflet.label is plugin for adding labels to markers &amp; shapes on leaflet powered maps.
 
 Check out the [demo](http://leaflet.github.com/Leaflet.label/).
