@@ -1,6 +1,22 @@
 /*global LeafletLabel */
 
 L.Path.include({
+	showLabel: function () {
+		if (this.label && this._map) {
+			this.label.setLatLng(this.getBounds().getCenter());
+			this._map.showLabel(this.label);
+		}
+
+		return this;
+	},
+
+	hideLabel: function () {
+		if (this.label) {
+			this.label.close();
+		}
+		return this;
+	},
+
 	bindLabel: function (content, options) {
 		if (!this.label || this.label.options !== options) {
 			this.label = new LeafletLabel(options, this);
@@ -8,15 +24,20 @@ L.Path.include({
 
 		this.label.setContent(content);
 
-		if (!this._showLabelAdded) {
-			this
-				.on('mouseover', this._showLabel, this)
-				.on('mousemove', this._moveLabel, this)
-				.on('mouseout remove', this._hideLabel, this);
+		this._labelNoHide = options && options.noHide;
 
-			if (L.Browser.touch) {
-				this.on('click', this._showLabel, this);
+		if (!this._showLabelAdded) {
+			if(!this._labelNoHide) {
+				this
+					.on('mouseover', this._showLabel, this)
+					.on('mousemove', this._moveLabel, this)
+					.on('mouseout', this._hideLabel, this);
+
+				if (L.Browser.touch) {
+					this.on('click', this._showLabel, this);
+				}
 			}
+			this.on('remove', this._hideLabel, this);
 			this._showLabelAdded = true;
 		}
 
@@ -28,10 +49,13 @@ L.Path.include({
 			this._hideLabel();
 			this.label = null;
 			this._showLabelAdded = false;
-			this
-				.off('mouseover', this._showLabel, this)
-				.off('mousemove', this._moveLabel, this)
-				.off('mouseout remove', this._hideLabel, this);
+			if(!this._labelNoHide) {
+				this
+					.off('mouseover', this._showLabel, this)
+					.off('mousemove', this._moveLabel, this)
+					.off('mouseout', this._hideLabel, this);
+			}
+			this.on('remove', this._hideLabel, this);
 		}
 		return this;
 	},
