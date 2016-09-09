@@ -36,8 +36,9 @@ var LeafletLabel = L.Class.extend({
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
-		zoomAnimation: true,
-		textOnly: false
+		textsize: "10px",
+		textOnly: false,
+		zoomAnimation: true
 	},
 
 	initialize: function (options, source) {
@@ -143,6 +144,7 @@ var LeafletLabel = L.Class.extend({
 
 	_initLayout: function () {
 		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		this._container.style.fontSize = this.options.textsize;
 		if (this.options.textOnly) { L.DomUtil.addClass(this._container, 'leaflet-label-text-only'); }
 		this.updateZIndex(this._zIndex);
 	},
