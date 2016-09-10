@@ -2,6 +2,8 @@ var LeafletLabel = L.Class.extend({
 
 	includes: L.Mixin.Events,
 
+	_directions: [ 'top', 'right', 'bottom', 'left' ],
+
 	options: {
 		className: '',
 		clickable: false,
@@ -9,6 +11,9 @@ var LeafletLabel = L.Class.extend({
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
 		opacity: 1,
+		textsize: "10px",
+		textOnly: false,
+        style: null,
 		zoomAnimation: true
 	},
 
@@ -20,11 +25,15 @@ var LeafletLabel = L.Class.extend({
 		this._isOpen = false;
 	},
 
+	_isOnMarker: function () {
+		return this._source instanceof L.Marker;
+	},
+
 	onAdd: function (map) {
 		this._map = map;
 
 		this._pane = this.options.pane ? map._panes[this.options.pane] :
-			this._source instanceof L.Marker ? map._panes.markerPane : map._panes.popupPane;
+            this._isOnMarker() ? map._panes.markerPane : map._panes.popupPane;
 
 		if (!this._container) {
 			this._initLayout();
@@ -115,6 +124,15 @@ var LeafletLabel = L.Class.extend({
 
 	_initLayout: function () {
 		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
+		this._container.style.fontSize = this.options.textsize;
+		if (this.options.textOnly) { L.DomUtil.addClass(this._container, 'leaflet-label-text-only'); }
+        if (this.options.style) {
+            for (var property in this.options.style) {
+                if (this.options.style.hasOwnProperty(property)) {
+                    this._container.style[property] = this.options.style[property];
+                }
+            }
+        }
 		this.updateZIndex(this._zIndex);
 	},
 
@@ -149,29 +167,65 @@ var LeafletLabel = L.Class.extend({
 		this._setPosition(pos);
 	},
 
+	_getIconHeight: function () {
+		return this._source.options.icon ? this._source.options.icon.options.iconSize[1] : 0;
+	},
+
 	_setPosition: function (pos) {
 		var map = this._map,
 			container = this._container,
 			centerPoint = map.latLngToContainerPoint(map.getCenter()),
 			labelPoint = map.layerPointToContainerPoint(pos),
-			direction = this.options.direction,
+			direction = this._getDirection(),
 			labelWidth = this._labelWidth,
-			offset = L.point(this.options.offset);
+			offset = L.point(this.options.offset),
+			verticalOffset = offset.y;
 
-		// position to the right (right or auto & needs to)
-		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
-			L.DomUtil.addClass(container, 'leaflet-label-right');
-			L.DomUtil.removeClass(container, 'leaflet-label-left');
+		if (direction === 'top') {
+			verticalOffset -= this._isOnMarker() ? this._getIconHeight() : 0;
 
+			pos = pos.add(L.point(-labelWidth / 2, verticalOffset));
+		} else if (direction === 'bottom') {
+			verticalOffset += this._isOnMarker ? this._getIconHeight() : 0;
+
+			pos = pos.add(L.point(-labelWidth / 2, verticalOffset));
+		} else if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
+			direction = 'right';
 			pos = pos.add(offset);
-		} else { // position to the left
-			L.DomUtil.addClass(container, 'leaflet-label-left');
-			L.DomUtil.removeClass(container, 'leaflet-label-right');
-
+		} else {
+			direction = 'left';
 			pos = pos.add(L.point(-offset.x - labelWidth, offset.y));
 		}
 
+		this._setProperClass(pos, direction);
 		L.DomUtil.setPosition(container, pos);
+	},
+
+	_generateLabelClass: function (direction) {
+		return 'leaflet-label-' + direction;
+	},
+
+	_setProperClass: function (pos, _direction) {
+		var map = this._map,
+			container = this._container,
+			direction = _direction || this._getDirection(),
+			labelPoint = map.layerPointToContainerPoint(pos),
+			centerPoint = map.latLngToContainerPoint(map.getCenter()),
+			classToAdd = this._generateLabelClass(direction);
+
+		for (var i = 0; i < this._directions.length; i++) {
+			var d = this._directions[i];
+			if (d !== direction) {
+				var classToRemove = this._generateLabelClass(d);
+				L.DomUtil.removeClass(container, classToRemove);
+			}
+		}
+
+		L.DomUtil.addClass(container, classToAdd);
+	},
+
+	_getDirection: function () {
+		return this.options.direction;
 	},
 
 	_zoomAnimation: function (opt) {
@@ -181,7 +235,7 @@ var LeafletLabel = L.Class.extend({
 	},
 
 	_onMoveEnd: function () {
-		if (!this._animated || this.options.direction === 'auto') {
+		if (!this._animated || this._getDirection() === 'auto') {
 			this._updatePosition();
 		}
 	},
