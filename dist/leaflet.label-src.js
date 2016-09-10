@@ -38,6 +38,7 @@ var LeafletLabel = L.Class.extend({
 		opacity: 1,
 		textsize: "10px",
 		textOnly: false,
+        style: null,
 		zoomAnimation: true
 	},
 
@@ -146,6 +147,13 @@ var LeafletLabel = L.Class.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-label ' + this.options.className + ' leaflet-zoom-animated');
 		this._container.style.fontSize = this.options.textsize;
 		if (this.options.textOnly) { L.DomUtil.addClass(this._container, 'leaflet-label-text-only'); }
+        if (this.options.style) {
+            for (var property in this.options.style) {
+                if (this.options.style.hasOwnProperty(property)) {
+                    this._container.style[property] = this.options.style[property];
+                }
+            }
+        }
 		this.updateZIndex(this._zIndex);
 	},
 
