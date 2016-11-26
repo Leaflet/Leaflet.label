@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"jshint": "~2.1.4",
-		"uglify-js": "~2.3.6"
+		"uglify-js": "~2.4.23"
 	},
 	"dependencies": {
 		"leaflet": "^0.7.7"
