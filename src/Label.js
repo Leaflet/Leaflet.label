@@ -140,6 +140,12 @@ var LeafletLabel = L.Class.extend({
 			this._prevContent = this._content;
 
 			this._labelWidth = this._container.offsetWidth;
+		} else if (this._content instanceof Element) {
+			this._container.appendChild(this._content);
+
+			this._prevContent = this._content;
+
+			this._labelWidth = this._container.offsetWidth;
 		}
 	},
 
