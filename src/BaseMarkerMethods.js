@@ -126,6 +126,12 @@ L.BaseMarkerMethods = {
 	},
 
 	_moveLabel: function (e) {
-		this.label.setLatLng(e.latlng);
+		// Translate label correctly if page has been scrolled
+		var map = this._map;
+		var point = map.latLngToLayerPoint(e.latlng);
+		var translateBy = L.point(window.pageXOffset, window.pageYOffset);
+		var translatedPoint = point.add(translateBy);
+		var newlatlng = map.layerPointToLatLng(translatedPoint);
+		this.label.setLatLng(newlatlng);
 	}
 };
